@@ -1,21 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>SHMSS</title>
-</head>
-<body>
-    <h1>Self Hosted Music Streaming Service</h1>
 
-    <audio controls>
-        <source src="http://localhost:3000/api/audio/Nightcore - Angel With A Shotgun.mp3" type="audio/mpeg">
-      Your browser does not support the audio element.
-      </audio>
-    
-    <script>
-        console.log('server:', window.location.href);
-    </script>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
+  <script src="assets/js/jquery-3.3.1.min.js"></script>
+  <title>SHMSS</title>
+</head>
+
+<body>
+  <h1>Self Hosted Music Streaming Service</h1>
+
+  <h3 id="playing-track"></h3>
+  <audio id="audio-player" preload="none" controls autoplay>
+    <source id="current" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio><br>
+  <button id="next">Next</button>
+  <button id="pause">Pause</button>
+  <button id="mode">Random</button>
+
+
+  <script>
+    'use strict';
+    let url = window.location.href
+    let audioAPI = "api/audio/"
+    let trackAPI = "api/tracklist/"
+    let trackList = [];
+    let played = 0;
+    let shuffle = false;
+
+    // console.log('server:', window.location.href);
+    // console.log(window.location.href + "api/tracklist/");
+
+    $.get(window.location.href + trackAPI, function (data) {
+      trackList = data;
+    });
+
+    let audioPlayer = document.getElementById("audio-player")
+    audioPlayer.addEventListener("ended", function () {
+      audioPlayer.currentTime = 0;
+      // console.log("ended");
+      chooseTrack();
+    });
+
+    let playTrack = function (track) {
+      document.getElementById("current").src = url + audioAPI + track
+      // console.log(document.getElementById("current").src);
+      document.getElementById("playing-track").innerHTML = track.split(".")[0]
+      audioPlayer.load();
+      played++
+    };
+
+    let chooseTrack = function () {
+      if (shuffle === true) {
+        console.log('playing random track')
+        random();
+      } else {
+        console.log('playing next track in list')
+        playlist();
+      }
+    };
+
+    let playlist = function () {
+      console.log(trackList[played])
+      playTrack(trackList[played]);
+      if (played === trackList.length) { played = 0 }
+    }
+
+    let random = function () {
+      let playing = Math.floor(Math.random() * trackList.length)
+      playTrack(trackList[playing].replace(' ', '\ '));
+    }
+
+    let nextTrack = document.getElementById("next")
+    nextTrack.onclick = function () {
+      // console.log('selecting next track');
+      chooseTrack();
+    };
+
+    let pauseTrack = document.getElementById("pause")
+    pauseTrack.onclick = function () {
+      if (audioPlayer.paused && audioPlayer.currentTime > 0 && !audioPlayer.ended) {
+        audioPlayer.play();
+        document.getElementById("pause").innerHTML = "Pause"
+      } else {
+        audioPlayer.pause();
+        document.getElementById("pause").innerHTML = "Play"
+      }
+    }
+
+    let playMode = document.getElementById("mode")
+    playMode.onclick = function () {
+      shuffle = !shuffle
+      console.log(shuffle)
+      if (shuffle === true) {
+        document.getElementById("mode").innerHTML = "List"
+      } else {
+        document.getElementById("mode").innerHTML = "Random"
+      }
+    }
+
+    window.onload = function () {
+      chooseTrack();
+    };
+
+    setTimeout(() => {
+      audioPlayer.play();
+    }, 500)
+  </script>
 </body>
+
 </html>

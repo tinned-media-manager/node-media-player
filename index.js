@@ -10,6 +10,8 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+let musicList = fs.readdirSync('public/music');
+
 // static files
 app.use(express.static('./public'));
 
@@ -18,19 +20,20 @@ app.get('/', (req, res) => {
 })
 
 app.route('/api/audio/:audio').get((req, res) => {
-  console.log('audio hit:', req.params.audio);
-  // console.log('requested file: ', req.params.image)
-  // console.log('dirname: ', `${reqPath}/${req.params.image}`);
-
+  console.log('Track requested:', req.params.audio);
   res.set('Content-Type', 'audio/mpeg');
   res.sendFile(`music/${req.params.audio}`, { root: './public' });
+});
+
+app.route('/api/tracklist/').get((req, res) => {
+  res.send(musicList);
 });
 
 app.listen(PORT, () => {
   console.log('Listening on port:', PORT, 'use CTRL+C to close.')
 })
 
-let music = fs.readdirSync('public/music');
+
 // console.log(music);
 
 // let musicList = JSON.stringify(music)
