@@ -11,7 +11,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 var dir = __dirname + '/public/music';
 if (!path.existsSync(dir)) {
-    fs.mkdirSync(dir, 0744);
+    fs.mkdirSync(dir);
 }
 
 let musicList = fs.readdirSync('public/music');
