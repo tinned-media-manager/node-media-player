@@ -9,6 +9,10 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+var dir = __dirname + '/public/music';
+if (!path.existsSync(dir)) {
+    fs.mkdirSync(dir, 0744);
+}
 
 let musicList = fs.readdirSync('public/music');
 
