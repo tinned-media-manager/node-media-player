@@ -8,4 +8,6 @@
 - [X] Next button to play next track.
 - [X] Play/Pause button function.
 - [X] List or Shuffle button function.
-- [ ] Add file upload button and function to add music.
+- [X] Add file upload button and function to add music.
+- [X] Prevent page from reloading after file upload.
+- [ ] Client refresh track list after file upload completes.

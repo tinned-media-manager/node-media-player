@@ -1,11 +1,10 @@
-
-
 fileSize = 0;
 fileSymb = '';
 uploadProgress = 0;
 $('#uploadForm').bind('change', function () {
     // clear file info when new file is selected
     document.getElementById("fileInfo").innerHTML = "";
+    document.getElementById("uploadForm").action = window.location.href + 'upload'
     // gets file information
     let uploadFileName = this[0].files[0].name;
     let uploadFileSize = this[0].files[0].size;
