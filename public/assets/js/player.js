@@ -69,7 +69,7 @@ pauseTrack.onclick = function () {
 let playMode = document.getElementById("mode")
 playMode.onclick = function () {
   shuffle = !shuffle
-  console.log(shuffle)
+//   console.log(shuffle)
   if (shuffle === true) {
     document.getElementById("mode").innerHTML = "List"
   } else {
