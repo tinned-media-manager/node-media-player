@@ -13,8 +13,8 @@ app.use(bodyParser.json());
 app.use(fileUpload());
 
 var dir = './public/music';
-if (!fs.existsSync(dir)){
-    fs.mkdirSync(dir);
+if (!fs.existsSync(dir)) {
+  fs.mkdirSync(dir);
 }
 
 let musicList = fs.readdirSync('public/music');
@@ -38,29 +38,39 @@ app.route('/api/tracklist/').get((req, res) => {
 
 // express-fileupload application.
 app.post('/upload', function (req, res) {
-  if (!req.files)
-      return res.status(400).send('No files were uploaded.');
-
+  if (!req.files) {
+    return res.status(400).send('No files were uploaded.');
+  }
   // The name of the input field (i.e "sampleFile") is used to retrieve the uploaded file.
   let sampleFile = req.files.sampleFile;
+  movefile(sampleFile, res);
 
+  console.log('sending 201 status')
+  // return res.status(201).send('file upload sucess');
+  // return res.status(201);
+});
+
+function movefile(sampleFile, res) {
   // use the mv() method to place the file somewhere on your server.
   sampleFile.mv(`./public/music/${sampleFile.name}`, function (err) {
-      console.log(sampleFile);
-      if (err)
-          return res.status(500).send(err);
+    console.log('file moving', sampleFile);
+    if (err) {
+      return res.status(500).send(err);
+    }
+    // checks the file size
+    // let stats = fs.statSync(`./public/music/${sampleFile.name}`);
+    // let fileSizeInBytes = stats.size;
 
-      // checks the file size
-      let stats = fs.statSync(`./public/music/${sampleFile.name}`);
-      // let fileSizeInBytes = stats.size;
-
-      // res.send(`${sampleFile.name} Uploaded!  ${fileSizeInBytes} Bytes`);
-      musicList = fs.readdirSync('public/music');
-      // res.sendFile(__dirname + '/public/index.html');
-      // res.sendFile('public/index.html', { root: './public' });
-      // res.send(uploadComplete());
+    // res.send(`${sampleFile.name} Uploaded!  ${fileSizeInBytes} Bytes`);
+    musicList = fs.readdirSync('public/music');
+    // res.sendFile(__dirname + '/public/index.html');
+    // res.sendFile('public/index.html', { root: './public' });
+    // res.send(uploadComplete());
+    console.log('file move complete')
+    // return res.status(201).send('file upload sucess');
+    return res.sendStatus(200);
   });
-});
+}
 
 app.listen(PORT, () => {
   console.log('Listening on port:', PORT, 'use CTRL+C to close.')
