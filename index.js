@@ -19,7 +19,6 @@ if (!fs.existsSync(dir)) {
   fs.mkdirSync(dir);
 }
 
-// let musicList = fs.readdirSync('public/music');
 let musicList = []
 let musicOBJ = []
 
@@ -32,10 +31,11 @@ app.get('/', (req, res) => {
 
 app.route('/api/audio/:audio').get((req, res) => {
   let filePath = '';
-  // console.log(JSON.parse(musicOBJ)[0])
   for (let i = 0; i < musicOBJ.length; i++){
-    // console.log(JSON.parse(musicOBJ)[i].filename, 'checking', req.params.audio, )
     if (JSON.parse(musicOBJ)[i].filename === req.params.audio){
+      if (JSON.parse(musicOBJ)[i].folderpath === '') {
+        break
+      }
       filePath = JSON.parse(musicOBJ)[i].folderpath + '/'
       break;
     }
@@ -50,7 +50,7 @@ app.route('/api/tracklist/').get((req, res) => {
 });
 
 // express-fileupload application.
-app.post('/upload', function (req, res) {
+app.post('/api/upload', function (req, res) {
   if (!req.files) {
     return res.status(400).send('No files were uploaded.');
   }
@@ -97,7 +97,6 @@ rl.on('line', (input) => {
     console.log(musicList);
   } else if (input === 'scan folder') {
     scanFolder()
-
   } else {
     console.log(input, 'is not a valid input')
   };
@@ -136,7 +135,6 @@ function scanFolder() {
     for (let i = 0; i < results.length; i++) {
       let splitting = results[i].split('/');
       let processing = [];
-      // console.log(splitting.indexOf('music'))
       for (let j = 0; j < splitting.length; j++) {
         if (j < splitting.indexOf('music') + 1) {
           delete splitting[j];
@@ -146,8 +144,6 @@ function scanFolder() {
       }
       processed.push(processing.join('+'));
     }
-    // console.log(processed);
-    // return processed
     musicList = processed
     saveToJSON(musicList);
   });
@@ -157,9 +153,7 @@ function saveToJSON(fileList) {
   let toObject = [];
   for (let i = 0; i < fileList.length; i++) {
     let folderFileSplit = fileList[i].split('+');
-    // console.log('split folder path:', folderFileSplit);
     let fileName = folderFileSplit[folderFileSplit.length -1];
-    // console.log('filename:', fileName);
     folderFileSplit.pop();
     let folderPath = folderFileSplit.join('/');
     
@@ -167,10 +161,9 @@ function saveToJSON(fileList) {
       filename: fileName,
       folderpath: folderPath,
     }
-    // console.log(file);
     toObject.push(file);
   }
-  // console.log('file list object:', toObject);
+
   musicOBJ = JSON.stringify(toObject)
   fs.writeFile("./public/master-list.json", JSON.stringify(toObject), 'utf8', function (err) {
     if (err) {
@@ -180,14 +173,4 @@ function saveToJSON(fileList) {
   });
 }
 
-// musicList = scanFolder();
 scanFolder();
-// console.log(musicList);
-
-// console.log(music);
-
-// let musicList = JSON.stringify(music)
-// console.log(musicList);
-
-// works but is deprecaited and causes app to crash
-// fs.writeFile('./data.json', JSON.stringify(music, null, 2) , 'utf-8');
