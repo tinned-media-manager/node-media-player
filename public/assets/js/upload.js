@@ -2,10 +2,12 @@ fileSize = 0;
 fileSymb = '';
 uploadProgress = 0;
 
-function uploadBox(){
-  
-}
-alert(<button>test button</button>)
+let uploadRequest = document.getElementById("extUpload");
+uploadRequest.onclick = function () {
+  alert("upload a file")
+};
+
+// alert(<button>test button</button>)
 $('#uploadForm').bind('change', function () {
   // clear file info when new file is selected
   document.getElementById("fileInfo").innerHTML = "";
@@ -29,15 +31,11 @@ $('#uploadForm').bind('change', function () {
   sizes = [Math.pow(1024, 6), Math.pow(1024, 5), Math.pow(1024, 4), Math.pow(1024, 3), Math.pow(1024, 2), 1024];
   symbols = ['PB', 'TB', 'GB', 'MB', 'KB', 'B'];
   for (let j = 0; j <= sizes.length; j++) {
-    // debugger;
     if (uploadFileSize <= sizes[j]) {
       fileSymb = symbols[j];
-      // console.log(fileSymb);
     };
     if (uploadFileSize >= sizes[j]) {
       fileSize = precisionRound(uploadFileSize / sizes[j], 2);
-      // console.log(uploadFileSize / sizes[j]);
-      // console.log(fileSize);
       break;
     };
   };
