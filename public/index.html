@@ -15,16 +15,19 @@
   <h1>Self Hosted Streaming Music Service</h1>
 
   <h3 id="playing-track"></h3>
-  <audio id="audio-player" preload="none" controls autoplay>
+  <audio id="audio-player" preload="none" controls autoplay style="width:400px;">
     <source id="current" type="audio/mpeg">
     Your browser does not support the audio element.
   </audio><br>
   <button id="next">Next</button>
   <button id="pause">Pause</button>
   <button id="mode">Random</button>
+  <button id="extUpload">Upload</button>
+
 
   <form ref="uploadForm" id="uploadForm" method="POST" encType="multipart/form-data">
-    <input type="file" name="sampleFile" />
+    <!-- <input type="file" name="sampleFile" /> -->
+    <input name="sampleFile" type="file" multiple/>
     <br>
     <input id="upload" type="submit" value="Upload!" onclick="uploadMonitor();" />
     <progress id="progressBar" value="0" max="100" style="width:300px;"></progress>

@@ -10,8 +10,10 @@ let shuffle = false;
 // console.log(window.location.href + "api/tracklist/");
 
 $.get(window.location.href + trackAPI, function (data) {
-  trackList = data;
+  trackList = JSON.parse(data);
+  // console.log(data)
 });
+// console.log(trackList);
 
 let audioPlayer = document.getElementById("audio-player")
 audioPlayer.addEventListener("ended", function () {
@@ -21,9 +23,22 @@ audioPlayer.addEventListener("ended", function () {
 });
 
 let playTrack = function (track) {
-  document.getElementById("current").src = url + audioAPI + track
+  // document.getElementById("current").src = url + audioAPI + track.filename
+  // fetch('/api/requested', {
+  //   url: url,
+  //   method: 'POST',
+  //   headers: {
+  //     'Content-Type':'application/json'
+  //   },
+  //   // body: saveContent
+  //   body: JSON.stringify(track)
+  // });
   // console.log(document.getElementById("current").src);
-  document.getElementById("playing-track").innerHTML = track.split(".")[0]
+  console.log(url + audioAPI + track.filename)
+  // let trackName = track.split('+')
+  // console.log("playing:", trackName)
+  // document.getElementById("playing-track").innerHTML = trackName[trackName.length -1].split(".")[0]
+  document.getElementById("current").src = url + audioAPI + track.filename
   audioPlayer.load();
   played++
 };
@@ -39,14 +54,15 @@ let chooseTrack = function () {
 };
 
 let playlist = function () {
-//   console.log(trackList[played])
+  console.log(trackList[played])
   playTrack(trackList[played]);
   if (played === trackList.length) { played = 0 }
 }
 
 let random = function () {
   let playing = Math.floor(Math.random() * trackList.length)
-  playTrack(trackList[playing].replace(' ', '\ '));
+  // playTrack(trackList[playing].replace(' ', '\ '));
+  playTrack(trackList[playing]);
 }
 
 let nextTrack = document.getElementById("next")
