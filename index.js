@@ -9,6 +9,7 @@ const cors = require('cors');
 const fileUpload = require('express-fileupload');
 const readline = require('readline');
 const ffmetadata = require("ffmetadata");
+const cmd = require('node-cmd');
 const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -98,6 +99,16 @@ rl.on('line', (input) => {
     console.log(musicList);
   } else if (input === 'scan folder') {
     scanFolder()
+  } else if (input === 'version') {
+    console.log('Version 1.01');
+  }  else if (input === 'update') {
+    cmd.get('git pull origin master'),
+    function (err, data, stderr) {
+      if (err) {
+        console.log(err);
+      }
+      console.log(data);
+    }
   } else {
     console.log(input, 'is not a valid input')
   };
