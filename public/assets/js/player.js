@@ -6,6 +6,7 @@ let trackList = [];
 let played = 0;
 let playedList = [];
 let shuffle = true;
+let currentTrack = {};
 
 $.get(window.location.href + trackAPI, function (data) {
   trackList = JSON.parse(data);
@@ -21,6 +22,7 @@ let playTrack = function (track) {
   document.getElementById("playing-track").innerHTML = track.filename.split('.')[0];
   document.getElementById("current").src = url + audioAPI + track.filename
   playedList.push(track.filename);
+  currentTrack = track;
   // console.log(playedList);
   audioPlayer.load();
   played++
@@ -135,19 +137,22 @@ $(document).ready(function() {
 
 // https://developers.google.com/web/updates/2017/02/media-session
 if ('mediaSession' in navigator) {
-
+// let trackTitle = currentTrack.filename.split(' - ')[1];
+let trackTitle = 'title';
   navigator.mediaSession.metadata = new MediaMetadata({
-    title: 'Never Gonna Give You Up',
-    artist: 'Rick Astley',
-    album: 'Whenever You Need Somebody',
-    artwork: [
-      { src: 'https://dummyimage.com/96x96',   sizes: '96x96',   type: 'image/png' },
-      { src: 'https://dummyimage.com/128x128', sizes: '128x128', type: 'image/png' },
-      { src: 'https://dummyimage.com/192x192', sizes: '192x192', type: 'image/png' },
-      { src: 'https://dummyimage.com/256x256', sizes: '256x256', type: 'image/png' },
-      { src: 'https://dummyimage.com/384x384', sizes: '384x384', type: 'image/png' },
-      { src: 'https://dummyimage.com/512x512', sizes: '512x512', type: 'image/png' },
-    ]
+    title: trackTitle,
+    // artist: currentTrack.filename.split(' - ')[0],
+    // title: 'title',
+    artist: 'artist',
+    // album: 'album',
+    // artwork: [
+    //   { src: 'https://dummyimage.com/96x96',   sizes: '96x96',   type: 'image/png' },
+    //   { src: 'https://dummyimage.com/128x128', sizes: '128x128', type: 'image/png' },
+    //   { src: 'https://dummyimage.com/192x192', sizes: '192x192', type: 'image/png' },
+    //   { src: 'https://dummyimage.com/256x256', sizes: '256x256', type: 'image/png' },
+    //   { src: 'https://dummyimage.com/384x384', sizes: '384x384', type: 'image/png' },
+    //   { src: 'https://dummyimage.com/512x512', sizes: '512x512', type: 'image/png' },
+    // ]
   });
 
   navigator.mediaSession.setActionHandler('play', function() {
