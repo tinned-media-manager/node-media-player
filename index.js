@@ -8,6 +8,7 @@ const bodyParser = require('body-parser')
 const cors = require('cors');
 const fileUpload = require('express-fileupload');
 const readline = require('readline');
+const ffmetadata = require("ffmetadata");
 const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -31,8 +32,8 @@ app.get('/', (req, res) => {
 
 app.route('/api/audio/:audio').get((req, res) => {
   let filePath = '';
-  for (let i = 0; i < musicOBJ.length; i++){
-    if (JSON.parse(musicOBJ)[i].filename === req.params.audio){
+  for (let i = 0; i < musicOBJ.length; i++) {
+    if (JSON.parse(musicOBJ)[i].filename === req.params.audio) {
       if (JSON.parse(musicOBJ)[i].folderpath === '') {
         break
       }
@@ -153,14 +154,17 @@ function saveToJSON(fileList) {
   let toObject = [];
   for (let i = 0; i < fileList.length; i++) {
     let folderFileSplit = fileList[i].split('+');
-    let fileName = folderFileSplit[folderFileSplit.length -1];
+    let fileName = folderFileSplit[folderFileSplit.length - 1];
     folderFileSplit.pop();
     let folderPath = folderFileSplit.join('/');
-    
+    let metaData = {};
+
     let file = {
       filename: fileName,
       folderpath: folderPath,
+      metadata: metaData,
     }
+
     toObject.push(file);
   }
 

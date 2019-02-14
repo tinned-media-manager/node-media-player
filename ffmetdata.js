@@ -2,13 +2,21 @@
 // sudo apt install ffmpeg
 // https://www.npmjs.com/package/ffmetadata
 const ffmetadata = require("ffmetadata");
- 
+
 // Read song.mp3 metadata
-ffmetadata.read("public/music/Boston - More Than a Feeling.mp3", function(err, data) {
+function readMetadata() {
+  ffmetadata.read("public/music/Boston - More Than a Feeling.mp3", function (err, data) {
     if (err) console.error("Error reading metadata", err);
-    else console.log(data);
-});
- 
+    else {
+      console.log(data)
+      return 'test';
+    }
+    
+  });
+}
+
+console.log(readMetadata());
+
 // Set the artist for song.mp3
 // var data = {
 //   artist: "Me",

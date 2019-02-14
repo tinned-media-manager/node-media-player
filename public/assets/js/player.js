@@ -80,8 +80,19 @@ playMode.onclick = function () {
   }
 }
 
+function domTrackList() {
+  for (let i = 0; i < trackList.length; i++) {
+    let liEm = document.createElement("li");
+    let info = document.createTextNode(trackList[i].filename.split('.')[0]);
+    liEm.appendChild(info);
+    document.getElementById("track-list").appendChild(liEm);
+  };
+};
+
+
 window.onload = function () {
   chooseTrack();
+  domTrackList()
 };
 
 setTimeout(() => {
