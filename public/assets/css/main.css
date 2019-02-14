@@ -1,0 +1,10 @@
+#track-list-container{
+    border: solid 1px black;
+    position: absolute;
+    top: 300px;
+    bottom: 0px;
+    left: 30px;
+    right: 30px;
+    width: 500px;
+    overflow: scroll;
+}
