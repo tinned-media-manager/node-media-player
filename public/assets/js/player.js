@@ -5,7 +5,7 @@ let trackAPI = "api/tracklist/"
 let trackList = [];
 let played = 0;
 let playedList = [];
-let shuffle = false;
+let shuffle = true;
 
 $.get(window.location.href + trackAPI, function (data) {
   trackList = JSON.parse(data);
@@ -85,9 +85,20 @@ function domTrackList() {
     let liEm = document.createElement("li");
     let info = document.createTextNode(trackList[i].filename.split('.')[0]);
     liEm.appendChild(info);
-    document.getElementById("track-list").appendChild(liEm);
+    document.getElementById("track-list").appendChild(liEm).id = trackList[i].filename;
   };
 };
+
+let userSelectedTrack = document.getElementById("track-list");
+userSelectedTrack.onclick = function (event) {
+  // console.log(event.target.id);
+  for (let i = 0; i < trackList.length; i++) {
+    if(event.target.id === trackList[i].filename) {
+      // console.log('file to play found!:', trackList[i].filename)
+      playTrack(trackList[i]);
+    }
+  }
+}
 
 
 window.onload = function () {
