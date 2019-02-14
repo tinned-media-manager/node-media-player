@@ -1,6 +1,6 @@
 'use strict';
 
-const serverVersion = ('Version 1.04');
+const serverVersion = ('Version 1.05');
 
 const fs = require('fs');
 const path = require('path');
@@ -31,6 +31,11 @@ app.use(express.static('./public'));
 
 app.get('/', (req, res) => {
   res.sendFile('public/index.html', { root: './public' });
+})
+
+app.get('/api/admin/update', (req, res) => {
+  update();
+  return res.status(201).send('Updated to:', serverVersion);
 })
 
 app.route('/api/audio/:audio').get((req, res) => {
