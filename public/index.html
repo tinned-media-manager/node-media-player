@@ -6,8 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="shortcut icon" href="music-note.png" type="image/x-icon" />
+  <link rel="stylesheet" type="text/css" href="assets/css/reset.css">
+  <link rel="stylesheet" type="text/css" href="assets/css/all.css">
   <link rel="stylesheet" type="text/css" href="assets/css/main.css">
   <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
+  <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
   <script src="assets/js/jquery-3.3.1.min.js"></script>
   <title>SHSMS</title>
 </head>
@@ -15,16 +18,24 @@
 <body>
   <h1>Self Hosted Streaming Music Service</h1>
 
-  <h3 id="playing-track"></h3>
-  <audio id="audio-player" preload="none" controls autoplay style="width:400px;">
-    <source id="current" type="audio/mpeg">
-    Your browser does not support the audio element.
-  </audio><br>
-  <button id="previous">Previous</button>
-  <button id="next">Next</button>
-  <button id="pause">Pause</button>
-  <button id="mode">Random</button>
-  <button id="extUpload">Upload</button>
+  <div id="media-player">
+    <div id="track-list-container">
+      <ul id="track-list">
+      </ul>
+    </div>
+
+    <h3 id="playing-track"></h3>
+    <audio id="audio-player" preload="none" controls autoplay style="width:400px;">
+      <source id="current" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio><br>
+    <button id="previous"><i class="fas fa-angle-double-left"></i></button>
+    <button id="next"><i class="fas fa-angle-double-right"></i></button>
+    <button id="pause"><i class="fas fa-pause"></i></button>
+    <button id="mode"><i class="fas fa-list-ul"></i></button>
+    <button id="extUpload"><i class="fas fa-upload"></i></button>
+  </div>
+
 
 
   <!-- <form ref="uploadForm" id="uploadForm" method="POST" encType="multipart/form-data">
@@ -40,12 +51,8 @@
     </ul>
   </div> -->
 
-  <div id="track-list-container">
-    <ul id="track-list">
-    </ul>
-  </div>
 
-
+  <script defer src="assets/js/all.js"></script>
   <script src="assets/js/player.js"></script>
   <script src="assets/js/upload.js"></script>
 </body>
