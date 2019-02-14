@@ -52,6 +52,10 @@ nextTrack.onclick = function () {
 
 let previousTrack = document.getElementById("previous")
 previousTrack.onclick = function () {
+  playPreviousTrack();
+}
+
+function playPreviousTrack(){
   playedList.pop()
   let backTrack = {filename: playedList[playedList.length - 1]};
   // console.log('Going back to:', backTrack);
@@ -61,12 +65,18 @@ previousTrack.onclick = function () {
 
 let pauseTrack = document.getElementById("pause")
 pauseTrack.onclick = function () {
+  playPauseTrack();
+}
+
+function playPauseTrack() {
   if (audioPlayer.paused && audioPlayer.currentTime > 0 && !audioPlayer.ended) {
-    audioPlayer.play();
-    document.getElementById("pause").innerHTML = "Pause"
+    audioPlayer.play()
+    .then(_ => { navigator.mediaSession.setActionHandler('play', function() {}) })
+    .catch(error => { console.log(error) });;
+    document.getElementById("pause").innerHTML = '<i class="fas fa-pause"></i>'
   } else {
     audioPlayer.pause();
-    document.getElementById("pause").innerHTML = "Play"
+    document.getElementById("pause").innerHTML = '<i class="fas fa-play"></i>'
   }
 }
 
@@ -74,9 +84,9 @@ let playMode = document.getElementById("mode")
 playMode.onclick = function () {
   shuffle = !shuffle
   if (shuffle === true) {
-    document.getElementById("mode").innerHTML = "List"
+    document.getElementById("mode").innerHTML = '<i class="fas fa-list-ul"></i>'
   } else {
-    document.getElementById("mode").innerHTML = "Random"
+    document.getElementById("mode").innerHTML = '<i class="fas fa-random"></i>'
   }
 }
 
@@ -109,3 +119,49 @@ window.onload = function () {
 setTimeout(() => {
   audioPlayer.play();
 }, 500)
+
+$(document).ready(function() {
+  $('#track-list').click(function() {
+      var href = $(this).find("a").attr("href");
+      if(href) {
+          window.location = href;
+      }
+  });
+  $('#track-list').hover(function() {
+    $(this).css('cursor','pointer')
+  });
+});
+
+
+// https://developers.google.com/web/updates/2017/02/media-session
+if ('mediaSession' in navigator) {
+
+  navigator.mediaSession.metadata = new MediaMetadata({
+    title: 'Never Gonna Give You Up',
+    artist: 'Rick Astley',
+    album: 'Whenever You Need Somebody',
+    artwork: [
+      { src: 'https://dummyimage.com/96x96',   sizes: '96x96',   type: 'image/png' },
+      { src: 'https://dummyimage.com/128x128', sizes: '128x128', type: 'image/png' },
+      { src: 'https://dummyimage.com/192x192', sizes: '192x192', type: 'image/png' },
+      { src: 'https://dummyimage.com/256x256', sizes: '256x256', type: 'image/png' },
+      { src: 'https://dummyimage.com/384x384', sizes: '384x384', type: 'image/png' },
+      { src: 'https://dummyimage.com/512x512', sizes: '512x512', type: 'image/png' },
+    ]
+  });
+
+  navigator.mediaSession.setActionHandler('play', function() {
+    playPauseTrack();
+  });
+  navigator.mediaSession.setActionHandler('pause', function() {
+    playPauseTrack();
+  });
+  // navigator.mediaSession.setActionHandler('seekbackward', function() {});
+  // navigator.mediaSession.setActionHandler('seekforward', function() {});
+  navigator.mediaSession.setActionHandler('previoustrack', function() {
+    playPreviousTrack();
+  });
+  navigator.mediaSession.setActionHandler('nexttrack', function() {
+    chooseTrack();
+  });
+}
