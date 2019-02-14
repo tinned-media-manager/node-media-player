@@ -4,72 +4,60 @@ let audioAPI = "api/audio/"
 let trackAPI = "api/tracklist/"
 let trackList = [];
 let played = 0;
+let playedList = [];
 let shuffle = false;
-
-// console.log('server:', window.location.href);
-// console.log(window.location.href + "api/tracklist/");
 
 $.get(window.location.href + trackAPI, function (data) {
   trackList = JSON.parse(data);
-  // console.log(data)
 });
-// console.log(trackList);
 
 let audioPlayer = document.getElementById("audio-player")
 audioPlayer.addEventListener("ended", function () {
   audioPlayer.currentTime = 0;
-  // console.log("ended");
   chooseTrack();
 });
 
 let playTrack = function (track) {
-  // document.getElementById("current").src = url + audioAPI + track.filename
-  // fetch('/api/requested', {
-  //   url: url,
-  //   method: 'POST',
-  //   headers: {
-  //     'Content-Type':'application/json'
-  //   },
-  //   // body: saveContent
-  //   body: JSON.stringify(track)
-  // });
-  // console.log(document.getElementById("current").src);
-  console.log(url + audioAPI + track.filename)
-  // let trackName = track.split('+')
-  // console.log("playing:", trackName)
-  // document.getElementById("playing-track").innerHTML = trackName[trackName.length -1].split(".")[0]
+  document.getElementById("playing-track").innerHTML = track.filename.split('.')[0];
   document.getElementById("current").src = url + audioAPI + track.filename
+  playedList.push(track.filename);
+  // console.log(playedList);
   audioPlayer.load();
   played++
 };
 
 let chooseTrack = function () {
   if (shuffle === true) {
-    // console.log('playing random track')
     random();
   } else {
-    // console.log('playing next track in list')
     playlist();
   }
 };
 
 let playlist = function () {
-  console.log(trackList[played])
+  // console.log(trackList[played])
   playTrack(trackList[played]);
   if (played === trackList.length) { played = 0 }
 }
 
 let random = function () {
   let playing = Math.floor(Math.random() * trackList.length)
-  // playTrack(trackList[playing].replace(' ', '\ '));
   playTrack(trackList[playing]);
 }
 
 let nextTrack = document.getElementById("next")
 nextTrack.onclick = function () {
-  // console.log('selecting next track');
   chooseTrack();
 };
+
+let previousTrack = document.getElementById("previous")
+previousTrack.onclick = function () {
+  playedList.pop()
+  let backTrack = {filename: playedList[playedList.length - 1]};
+  // console.log('Going back to:', backTrack);
+  playTrack(backTrack);
+  playedList.pop()
+}
 
 let pauseTrack = document.getElementById("pause")
 pauseTrack.onclick = function () {
@@ -85,7 +73,6 @@ pauseTrack.onclick = function () {
 let playMode = document.getElementById("mode")
 playMode.onclick = function () {
   shuffle = !shuffle
-//   console.log(shuffle)
   if (shuffle === true) {
     document.getElementById("mode").innerHTML = "List"
   } else {
@@ -93,8 +80,19 @@ playMode.onclick = function () {
   }
 }
 
+function domTrackList() {
+  for (let i = 0; i < trackList.length; i++) {
+    let liEm = document.createElement("li");
+    let info = document.createTextNode(trackList[i].filename.split('.')[0]);
+    liEm.appendChild(info);
+    document.getElementById("track-list").appendChild(liEm);
+  };
+};
+
+
 window.onload = function () {
   chooseTrack();
+  domTrackList()
 };
 
 setTimeout(() => {

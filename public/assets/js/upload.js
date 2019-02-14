@@ -1,6 +1,8 @@
-fileSize = 0;
-fileSymb = '';
-uploadProgress = 0;
+'use strict';
+
+let fileSize = 0;
+let fileSymb = '';
+let uploadProgress = 0;
 
 let uploadRequest = document.getElementById("extUpload");
 uploadRequest.onclick = function () {
@@ -12,7 +14,7 @@ $('#uploadForm').bind('change', function () {
   // clear file info when new file is selected
   document.getElementById("fileInfo").innerHTML = "";
   // sets upload url dynamically based on server connection
-  document.getElementById("uploadForm").action = window.location.href + 'upload'
+  document.getElementById("uploadForm").action = window.location.href + 'api/upload'
   // gets file information
   let uploadFileName = this[0].files[0].name;
   let uploadFileSize = this[0].files[0].size;
@@ -28,8 +30,8 @@ $('#uploadForm').bind('change', function () {
     return Math.round(number * factor) / factor;
   };
   // Calculates a more readable output for file size.
-  sizes = [Math.pow(1024, 6), Math.pow(1024, 5), Math.pow(1024, 4), Math.pow(1024, 3), Math.pow(1024, 2), 1024];
-  symbols = ['PB', 'TB', 'GB', 'MB', 'KB', 'B'];
+  let sizes = [Math.pow(1024, 6), Math.pow(1024, 5), Math.pow(1024, 4), Math.pow(1024, 3), Math.pow(1024, 2), 1024];
+  let symbols = ['PB', 'TB', 'GB', 'MB', 'KB', 'B'];
   for (let j = 0; j <= sizes.length; j++) {
     if (uploadFileSize <= sizes[j]) {
       fileSymb = symbols[j];

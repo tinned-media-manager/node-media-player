@@ -19,14 +19,14 @@
     <source id="current" type="audio/mpeg">
     Your browser does not support the audio element.
   </audio><br>
+  <button id="previous">Previous</button>
   <button id="next">Next</button>
   <button id="pause">Pause</button>
   <button id="mode">Random</button>
   <button id="extUpload">Upload</button>
 
 
-  <form ref="uploadForm" id="uploadForm" method="POST" encType="multipart/form-data">
-    <!-- <input type="file" name="sampleFile" /> -->
+  <!-- <form ref="uploadForm" id="uploadForm" method="POST" encType="multipart/form-data">
     <input name="sampleFile" type="file" multiple/>
     <br>
     <input id="upload" type="submit" value="Upload!" onclick="uploadMonitor();" />
@@ -36,6 +36,11 @@
   </form>
   <div>
     <ul id="fileInfo">
+    </ul>
+  </div> -->
+
+  <div>
+    <ul id="track-list">
     </ul>
   </div>
 

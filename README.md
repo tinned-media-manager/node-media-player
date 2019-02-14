@@ -21,3 +21,4 @@
 - [ ] Add the ability to upload multiple files.
 - [ ] Add ability for drag and drop file upload.
 - [X] File scanner that supports nested folders.
+- [X] Previous track functionality.
