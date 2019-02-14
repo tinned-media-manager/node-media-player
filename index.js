@@ -100,9 +100,16 @@ rl.on('line', (input) => {
   } else if (input === 'scan folder') {
     scanFolder()
   } else if (input === 'version') {
-    console.log('Version 1.01');
+    console.log('Version 1.02');
   }  else if (input === 'update') {
     cmd.get('git pull origin master'),
+    function (err, data, stderr) {
+      if (err) {
+        console.log(err);
+      }
+      console.log(data);
+    }
+    cmd.get('npm install -y'),
     function (err, data, stderr) {
       if (err) {
         console.log(err);
