@@ -1,5 +1,7 @@
 'use strict';
 
+const serverVersion = ('Version 1.04');
+
 const fs = require('fs');
 const path = require('path');
 const express = require('express')
@@ -98,28 +100,32 @@ rl.on('line', (input) => {
   if (input === 'print list') {
     console.log(musicList);
   } else if (input === 'scan folder') {
-    scanFolder()
+    scanFolder();
   } else if (input === 'version') {
-    console.log('Version 1.02');
-  }  else if (input === 'update') {
-    cmd.get('git pull origin master'),
-    function (err, data, stderr) {
-      if (err) {
-        console.log(err);
-      }
-      console.log(data);
-    }
-    cmd.get('npm install -y'),
-    function (err, data, stderr) {
-      if (err) {
-        console.log(err);
-      }
-      console.log(data);
-    }
+    console.log(serverVersion);
+  } else if (input === 'update') {
+   update(); 
   } else {
     console.log(input, 'is not a valid input')
   };
 });
+
+function update(){
+  cmd.get('git pull origin master'),
+  function (err, data, stderr) {
+    if (err) {
+      console.log(err);
+    }
+    console.log(data);
+  }
+  cmd.get('npm install -y'),
+  function (err, data, stderr) {
+    if (err) {
+      console.log(err);
+    }
+    console.log(data);
+  }
+}
 
 
 // Process files and folders.
