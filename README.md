@@ -22,3 +22,9 @@
 - [ ] Add ability for drag and drop file upload.
 - [X] File scanner that supports nested folders.
 - [X] Previous track functionality.
+- [X] Style buttons with font-awesome.
+- [X] Mobile lock screen controls.
+
+## resources
+- https://fontawesome.com/icons?d=gallery&c=audio-video&m=free
+- https://developers.google.com/web/updates/2017/02/media-session
