@@ -99,8 +99,16 @@ rl.on('line', (input) => {
     console.log(musicList);
   } else if (input === 'scan folder') {
     scanFolder()
-  } else if (input === 'update') {
-    cmd.get('git pull origin master');
+  } else if (input === 'version') {
+    console.log('Version 1.01');
+  }  else if (input === 'update') {
+    cmd.get('git pull origin master'),
+    function (err, data, stderr) {
+      if (err) {
+        console.log(err);
+      }
+      console.log(data);
+    }
   } else {
     console.log(input, 'is not a valid input')
   };
