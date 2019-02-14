@@ -4,6 +4,7 @@ let audioAPI = "api/audio/"
 let trackAPI = "api/tracklist/"
 let trackList = [];
 let played = 0;
+let playedList = [];
 let shuffle = false;
 
 $.get(window.location.href + trackAPI, function (data) {
@@ -19,6 +20,8 @@ audioPlayer.addEventListener("ended", function () {
 let playTrack = function (track) {
   document.getElementById("playing-track").innerHTML = track.filename.split('.')[0];
   document.getElementById("current").src = url + audioAPI + track.filename
+  playedList.push(track.filename);
+  // console.log(playedList);
   audioPlayer.load();
   played++
 };
@@ -32,7 +35,7 @@ let chooseTrack = function () {
 };
 
 let playlist = function () {
-  console.log(trackList[played])
+  // console.log(trackList[played])
   playTrack(trackList[played]);
   if (played === trackList.length) { played = 0 }
 }
@@ -46,6 +49,15 @@ let nextTrack = document.getElementById("next")
 nextTrack.onclick = function () {
   chooseTrack();
 };
+
+let previousTrack = document.getElementById("previous")
+previousTrack.onclick = function () {
+  playedList.pop()
+  let backTrack = {filename: playedList[playedList.length - 1]};
+  // console.log('Going back to:', backTrack);
+  playTrack(backTrack);
+  playedList.pop()
+}
 
 let pauseTrack = document.getElementById("pause")
 pauseTrack.onclick = function () {
