@@ -9,6 +9,7 @@ const cors = require('cors');
 const fileUpload = require('express-fileupload');
 const readline = require('readline');
 const ffmetadata = require("ffmetadata");
+const cmd = require('node-cmd');
 const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -98,6 +99,8 @@ rl.on('line', (input) => {
     console.log(musicList);
   } else if (input === 'scan folder') {
     scanFolder()
+  } else if (input === 'update') {
+    cmd.get('git pull origin master');
   } else {
     console.log(input, 'is not a valid input')
   };
