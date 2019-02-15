@@ -24,15 +24,29 @@
     </div>
 
     <h3 id="playing-track"></h3>
-    <audio id="audio-player" preload="none" controls autoplay style="width:400px;">
+    <audio id="audio-player" preload="none" autoplay style="width:400px;">
       <source id="current" type="audio/mpeg">
       Your browser does not support the audio element.
     </audio><br>
-    <button id="previous" class="control-buttons"><i class="fas fa-angle-double-left"></i></button>
-    <button id="next" class="control-buttons"><i class="fas fa-angle-double-right"></i></button>
+    <div id="track-progress">
+      <div id="track-progress-bar"></div>
+    </div><br>
+    <p id="track-time"></p>
+    <div id="time-and-volume">
+      <div id="volume-level"></div>
+    </div><br>
+    <button id="previous" class="control-buttons"><i class="fas fa-step-backward"></i></button>
+    <button id="rewind" class="control-buttons"><i class="fas fa-fast-backward"></i></button>
     <button id="pause" class="control-buttons"><i class="fas fa-pause"></i></button>
+    <button id="forward" class="control-buttons"><i class="fas fa-fast-forward"></i></button>
+    <button id="next" class="control-buttons"><i class="fas fa-step-forward"></i></button>
+    <button id="volume-down" class="control-buttons"><i class="fas fa-volume-down"></i></button>
+    <button id="volume-up" class="control-buttons"><i class="fas fa-volume-up"></i></button>
+    <button id="volume-mute" class="control-buttons"><i class="fas fa-volume-mute"></i></button>
     <button id="mode" class="control-buttons"><i class="fas fa-list-ul"></i></button>
     <button id="extUpload" class="control-buttons"><i class="fas fa-upload"></i></button>
+
+
   </div>
 
 

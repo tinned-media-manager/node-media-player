@@ -1,12 +1,13 @@
 'use strict';
-let url = window.location.href
-let audioAPI = "api/audio/"
-let trackAPI = "api/tracklist/"
+const url = window.location.href
+const audioAPI = "api/audio/"
+const trackAPI = "api/tracklist/"
 let trackList = [];
 let played = 0;
 let playedList = [];
 let shuffle = true;
 let currentTrack = {};
+let volume = 1;
 
 $.get(window.location.href + trackAPI, function (data) {
   trackList = JSON.parse(data);
@@ -61,7 +62,6 @@ previousTrack.onclick = function () {
 function playPreviousTrack() {
   playedList.pop()
   let backTrack = { filename: playedList[playedList.length - 1] };
-  // console.log('Going back to:', backTrack);
   playTrack(backTrack);
   playedList.pop()
 }
@@ -71,11 +71,76 @@ pauseTrack.onclick = function () {
   playPauseTrack();
 }
 
+function skipForward(){
+  audioPlayer.currentTime = audioPlayer.currentTime + 10;
+}
+
+let forwardTrack = document.getElementById("forward")
+forwardTrack.onclick = function () {
+  skipForward();
+}
+
+function rewindBack() {
+  audioPlayer.currentTime = audioPlayer.currentTime - 10;
+}
+
+let rewindTrack = document.getElementById("rewind");
+rewindTrack.onclick = function () {
+  rewindBack();
+}
+
+function volumeLevel() {
+  let progress = document.getElementById("volume-level"); 
+  let width = audioPlayer.volume * 100;
+  progress.style.width = width + '%'; 
+};
+
+function audioVolumeUp() {
+  if (audioPlayer.volume < 1) {
+    audioPlayer.volume = audioPlayer.volume + .1;
+  }
+  volume = audioPlayer.volume;
+  volumeLevel()
+}
+
+let volumeUp = document.getElementById("volume-up");
+volumeUp.onclick = function () {
+  audioVolumeUp();
+}
+
+function audioVolumeDown() {
+  if (audioPlayer.volume > .1){
+    audioPlayer.volume = audioPlayer.volume - .1;
+  }
+  volume = audioPlayer.volume;
+  volumeLevel()
+}
+
+let volumeDown = document.getElementById("volume-down");
+volumeDown.onclick = function () {
+  audioVolumeDown();
+}
+
+function mute(){
+  if (audioPlayer.volume === 0){
+    audioPlayer.volume = volume;
+    document.getElementById("volume-mute").innerHTML = '<i class="fas fa-volume-mute"></i>'
+  } else {
+    volume = audioPlayer.volume
+    audioPlayer.volume = 0
+    document.getElementById("volume-mute").innerHTML = '<i class="fas fa-volume-off"></i>'
+  }
+  volumeLevel()
+}
+
+let volumeMute = document.getElementById("volume-mute");
+volumeMute.onclick = function () {
+  mute();
+}
+
 function playPauseTrack() {
   if (audioPlayer.paused && audioPlayer.currentTime > 0 && !audioPlayer.ended) {
-    audioPlayer.play()
-      .then(_ => { navigator.mediaSession.setActionHandler('play', function () { }) })
-      .catch(error => { console.log(error) });;
+    audioPlayer.play();
     document.getElementById("pause").innerHTML = '<i class="fas fa-pause"></i>'
   } else {
     audioPlayer.pause();
@@ -86,6 +151,10 @@ function playPauseTrack() {
 let playMode = document.getElementById("mode")
 playMode.onclick = function () {
   shuffle = !shuffle
+  modeButtonIcon();
+}
+
+function modeButtonIcon () {
   if (shuffle === true) {
     document.getElementById("mode").innerHTML = '<i class="fas fa-list-ul"></i>'
   } else {
@@ -104,25 +173,26 @@ function domTrackList() {
 
 let userSelectedTrack = document.getElementById("track-list");
 userSelectedTrack.onclick = function (event) {
-  // console.log(event.target.id);
   for (let i = 0; i < trackList.length; i++) {
     if (event.target.id === trackList[i].filename) {
-      // console.log('file to play found!:', trackList[i].filename)
       playTrack(trackList[i]);
-    }
-  }
-}
+    };
+  };
+};
 
 
 window.onload = function () {
   chooseTrack();
-  domTrackList()
+  domTrackList();
+  modeButtonIcon();
+  volumeLevel();
 };
 
 setTimeout(() => {
   audioPlayer.play();
-}, 500)
+}, 500);
 
+// Changes cursor from arrow to hand when hovering over music list on page.
 $(document).ready(function () {
   $('#track-list').click(function () {
     var href = $(this).find("a").attr("href");
@@ -134,9 +204,6 @@ $(document).ready(function () {
     $(this).css('cursor', 'pointer')
   });
 });
-
-// setMetadata();
-
 
 function setMetadata() {
   // https://developers.google.com/web/updates/2017/02/media-session
@@ -171,3 +238,27 @@ function setMetadata() {
     });
   }
 }
+
+function trackProgressBar() {
+  let progress = document.getElementById("track-progress-bar"); 
+  let width = 0;
+  width = Math.floor((audioPlayer.currentTime / audioPlayer.duration) * 100);
+  progress.style.width = width + '%'; 
+};
+
+function toHHMMSS (secs) {
+  var sec_num = parseInt(secs, 10)    
+  var hours   = Math.floor(sec_num / 3600) % 24
+  var minutes = Math.floor(sec_num / 60) % 60
+  var seconds = sec_num % 60    
+  return [hours,minutes,seconds]
+      .map(v => v < 10 ? "0" + v : v)
+      .filter((v,i) => v !== "00" || i > 0)
+      .join(":")
+}
+
+setInterval(function(){ 
+  trackProgressBar()
+  document.getElementById("track-time").innerHTML = `${toHHMMSS(audioPlayer.currentTime)} / ${toHHMMSS(audioPlayer.duration)}`;
+  // console.log(toHHMMSS(audioPlayer.currentTime), '/', toHHMMSS(audioPlayer.duration));
+}, 500);
