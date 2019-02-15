@@ -162,6 +162,25 @@ function modeButtonIcon () {
   }
 }
 
+// Keyboard controls
+document.onkeydown = function (event) {
+  if (event.keyCode === 32) { // Space Pause/Play
+    playPauseTrack();
+  } else if (event.keyCode === 39) { // Left Arrow fast forward
+    skipForward();
+  } else if (event.keyCode === 37) { // Right Arrow Rewind
+    rewindBack();
+  } else if (event.keyCode === 38) { // Up Arrow Volume Up
+    audioVolumeUp();
+  } else if (event.keyCode === 40) { // Down Arrow Volume Down
+    audioVolumeDown();
+  } else if (event.keyCode === 190) { // > Next Track
+    chooseTrack();
+  } else if (event.keyCode === 188) { // < Previous Track
+    playPreviousTrack();
+  }
+};
+
 function domTrackList() {
   for (let i = 0; i < trackList.length; i++) {
     let liEm = document.createElement("li");
@@ -228,8 +247,12 @@ function setMetadata() {
     navigator.mediaSession.setActionHandler('pause', function () {
       playPauseTrack();
     });
-    // navigator.mediaSession.setActionHandler('seekbackward', function() {});
-    // navigator.mediaSession.setActionHandler('seekforward', function() {});
+    navigator.mediaSession.setActionHandler('seekbackward', function() {
+      skipForward();
+    });
+    navigator.mediaSession.setActionHandler('seekforward', function() {
+      rewindBack();
+    });
     navigator.mediaSession.setActionHandler('previoustrack', function () {
       playPreviousTrack();
     });
