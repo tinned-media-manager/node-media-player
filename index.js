@@ -1,6 +1,6 @@
 'use strict';
 
-const serverVersion = ('Version 1.06');
+const serverVersion = ('Version 1.08');
 
 const fs = require('fs');
 const path = require('path');

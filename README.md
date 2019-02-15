@@ -25,6 +25,8 @@
 - [X] Style buttons with font-awesome.
 - [X] Mobile lock screen controls.
 - [X] Command line module for live updating.
+- [X] Complete set of basic custom controls.
+- [X] Keyboard shortcut controls.
 
 ## resources
 - https://fontawesome.com/icons?d=gallery&c=audio-video&m=free
