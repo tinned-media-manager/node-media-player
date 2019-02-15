@@ -35,7 +35,7 @@ app.get('/', (req, res) => {
 
 app.get('/api/admin/update', (req, res) => {
   update();
-  return res.status(201).send('Updated to:', serverVersion);
+  // return res.status(200).send('Updated to:', serverVersion);
 })
 
 app.route('/api/audio/:audio').get((req, res) => {
@@ -110,11 +110,14 @@ rl.on('line', (input) => {
     console.log(serverVersion);
   } else if (input === 'update') {
    update(); 
+  } else if (input === 'p') {
+    update(); 
   } else {
     console.log(input, 'is not a valid input')
   };
 });
 
+// update from github master
 function update(){
   cmd.get('git pull origin master'),
   function (err, data, stderr) {
