@@ -34,8 +34,9 @@ app.get('/', (req, res) => {
 })
 
 app.get('/api/admin/update', (req, res) => {
+  res.status(200).send('Updating to: ' + serverVersion);
+  // res.status(200).send('Updating to:');
   update();
-  // return res.status(200).send('Updated to:', serverVersion);
 })
 
 app.route('/api/audio/:audio').get((req, res) => {
