@@ -27,6 +27,7 @@
 - [X] Command line module for live updating.
 - [X] Complete set of basic custom controls.
 - [X] Keyboard shortcut controls.
+- [X] Prevent repeat plays within an ammount of plays for random.
 
 ## resources
 - https://fontawesome.com/icons?d=gallery&c=audio-video&m=free
