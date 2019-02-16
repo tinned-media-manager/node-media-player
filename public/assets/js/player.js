@@ -8,29 +8,25 @@ let playedList = [];
 let shuffle = true;
 let currentTrack = {};
 let volume = 1;
+let noRepeat = 10
 
+// Gets the full track list from server API
 $.get(window.location.href + trackAPI, function (data) {
   trackList = JSON.parse(data);
 });
 
-let audioPlayer = document.getElementById("audio-player")
-audioPlayer.addEventListener("ended", function () {
-  audioPlayer.currentTime = 0;
-  chooseTrack();
-});
-
+// Player functions
 let playTrack = function (track) {
   document.getElementById("playing-track").innerHTML = track.filename.split('.')[0];
   document.getElementById("current").src = url + audioAPI + track.filename
   playedList.push(track.filename);
   currentTrack = track;
   setMetadata();
-  // console.log(playedList);
   audioPlayer.load();
   played++
 };
 
-let chooseTrack = function () {
+function chooseTrack() {
   if (shuffle === true) {
     random();
   } else {
@@ -38,25 +34,21 @@ let chooseTrack = function () {
   }
 };
 
-let playlist = function () {
-  // console.log(trackList[played])
+function playlist() {
   playTrack(trackList[played]);
   if (played === trackList.length) { played = 0 }
 }
 
-let random = function () {
+function random() {
   let playing = Math.floor(Math.random() * trackList.length)
+  if (playedList.length > noRepeat){
+    for (let i = playedList.length - noRepeat; i < playedList.length; i++){
+      if (trackList[playing].filename === playedList[i]){
+        playing = Math.floor(Math.random() * trackList.length)
+      }
+    }
+  }
   playTrack(trackList[playing]);
-}
-
-let nextTrack = document.getElementById("next")
-nextTrack.onclick = function () {
-  chooseTrack();
-};
-
-let previousTrack = document.getElementById("previous")
-previousTrack.onclick = function () {
-  playPreviousTrack();
 }
 
 function playPreviousTrack() {
@@ -66,27 +58,12 @@ function playPreviousTrack() {
   playedList.pop()
 }
 
-let pauseTrack = document.getElementById("pause")
-pauseTrack.onclick = function () {
-  playPauseTrack();
-}
-
 function skipForward(){
   audioPlayer.currentTime = audioPlayer.currentTime + 10;
 }
 
-let forwardTrack = document.getElementById("forward")
-forwardTrack.onclick = function () {
-  skipForward();
-}
-
 function rewindBack() {
   audioPlayer.currentTime = audioPlayer.currentTime - 10;
-}
-
-let rewindTrack = document.getElementById("rewind");
-rewindTrack.onclick = function () {
-  rewindBack();
 }
 
 function volumeLevel() {
@@ -103,22 +80,12 @@ function audioVolumeUp() {
   volumeLevel()
 }
 
-let volumeUp = document.getElementById("volume-up");
-volumeUp.onclick = function () {
-  audioVolumeUp();
-}
-
 function audioVolumeDown() {
   if (audioPlayer.volume > .1){
     audioPlayer.volume = audioPlayer.volume - .1;
   }
   volume = audioPlayer.volume;
   volumeLevel()
-}
-
-let volumeDown = document.getElementById("volume-down");
-volumeDown.onclick = function () {
-  audioVolumeDown();
 }
 
 function mute(){
@@ -133,11 +100,6 @@ function mute(){
   volumeLevel()
 }
 
-let volumeMute = document.getElementById("volume-mute");
-volumeMute.onclick = function () {
-  mute();
-}
-
 function playPauseTrack() {
   if (audioPlayer.paused && audioPlayer.currentTime > 0 && !audioPlayer.ended) {
     audioPlayer.play();
@@ -148,12 +110,6 @@ function playPauseTrack() {
   }
 }
 
-let playMode = document.getElementById("mode")
-playMode.onclick = function () {
-  shuffle = !shuffle
-  modeButtonIcon();
-}
-
 function modeButtonIcon () {
   if (shuffle === true) {
     document.getElementById("mode").innerHTML = '<i class="fas fa-list-ul"></i>'
@@ -161,6 +117,100 @@ function modeButtonIcon () {
     document.getElementById("mode").innerHTML = '<i class="fas fa-random"></i>'
   }
 }
+
+function domTrackList() {
+  for (let i = 0; i < trackList.length; i++) {
+    let liEm = document.createElement("li");
+    let info = document.createTextNode(trackList[i].filename.split('.')[0]);
+    liEm.appendChild(info);
+    document.getElementById("track-list").appendChild(liEm).id = trackList[i].filename;
+  };
+};
+
+window.onload = function () {
+  chooseTrack();
+  modeButtonIcon();
+  volumeLevel();
+  setTimeout(() => {
+    domTrackList();
+    audioPlayer.play();
+  }, 500);
+};
+
+// Webpage DOM controls
+let audioPlayer = document.getElementById("audio-player")
+audioPlayer.addEventListener("ended", function () {
+  audioPlayer.currentTime = 0;
+  chooseTrack();
+});
+
+let pauseTrack = document.getElementById("pause")
+pauseTrack.onclick = function () {
+  playPauseTrack();
+}
+
+let nextTrack = document.getElementById("next")
+nextTrack.onclick = function () {
+  chooseTrack();
+};
+
+let previousTrack = document.getElementById("previous")
+previousTrack.onclick = function () {
+  playPreviousTrack();
+};
+
+let forwardTrack = document.getElementById("forward")
+forwardTrack.onclick = function () {
+  skipForward();
+}
+
+let rewindTrack = document.getElementById("rewind");
+rewindTrack.onclick = function () {
+  rewindBack();
+}
+
+let volumeUp = document.getElementById("volume-up");
+volumeUp.onclick = function () {
+  audioVolumeUp();
+}
+
+let volumeDown = document.getElementById("volume-down");
+volumeDown.onclick = function () {
+  audioVolumeDown();
+}
+
+let volumeMute = document.getElementById("volume-mute");
+volumeMute.onclick = function () {
+  mute();
+}
+
+let playMode = document.getElementById("mode")
+playMode.onclick = function () {
+  shuffle = !shuffle
+  modeButtonIcon();
+}
+
+let userSelectedTrack = document.getElementById("track-list");
+userSelectedTrack.onclick = function (event) {
+  for (let i = 0; i < trackList.length; i++) {
+    if (event.target.id === trackList[i].filename) {
+      playTrack(trackList[i]);
+    };
+  };
+};
+
+// Changes cursor from arrow to hand when hovering over music list on page.
+$(document).ready(function () {
+  $('#track-list').click(function () {
+    var href = $(this).find("a").attr("href");
+    if (href) {
+      window.location = href;
+    }
+  });
+  $('#track-list').hover(function () {
+    $(this).css('cursor', 'pointer')
+  });
+});
 
 // Keyboard controls
 document.onkeydown = function (event) {
@@ -181,49 +231,7 @@ document.onkeydown = function (event) {
   }
 };
 
-function domTrackList() {
-  for (let i = 0; i < trackList.length; i++) {
-    let liEm = document.createElement("li");
-    let info = document.createTextNode(trackList[i].filename.split('.')[0]);
-    liEm.appendChild(info);
-    document.getElementById("track-list").appendChild(liEm).id = trackList[i].filename;
-  };
-};
-
-let userSelectedTrack = document.getElementById("track-list");
-userSelectedTrack.onclick = function (event) {
-  for (let i = 0; i < trackList.length; i++) {
-    if (event.target.id === trackList[i].filename) {
-      playTrack(trackList[i]);
-    };
-  };
-};
-
-
-window.onload = function () {
-  chooseTrack();
-  domTrackList();
-  modeButtonIcon();
-  volumeLevel();
-};
-
-setTimeout(() => {
-  audioPlayer.play();
-}, 500);
-
-// Changes cursor from arrow to hand when hovering over music list on page.
-$(document).ready(function () {
-  $('#track-list').click(function () {
-    var href = $(this).find("a").attr("href");
-    if (href) {
-      window.location = href;
-    }
-  });
-  $('#track-list').hover(function () {
-    $(this).css('cursor', 'pointer')
-  });
-});
-
+// Mobile Controls
 function setMetadata() {
   // https://developers.google.com/web/updates/2017/02/media-session
   if ('mediaSession' in navigator) {
@@ -262,6 +270,8 @@ function setMetadata() {
   }
 }
 
+
+// Media player dynamic content
 function trackProgressBar() {
   let progress = document.getElementById("track-progress-bar"); 
   let width = 0;
@@ -283,5 +293,4 @@ function toHHMMSS (secs) {
 setInterval(function(){ 
   trackProgressBar()
   document.getElementById("track-time").innerHTML = `${toHHMMSS(audioPlayer.currentTime)} / ${toHHMMSS(audioPlayer.duration)}`;
-  // console.log(toHHMMSS(audioPlayer.currentTime), '/', toHHMMSS(audioPlayer.duration));
 }, 500);
