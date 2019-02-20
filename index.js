@@ -1,6 +1,6 @@
 'use strict';
 
-const serverVersion = ('Version 1.14');
+const serverVersion = ('Version 1.15');
 
 const fs = require('fs');
 const path = require('path');
@@ -102,6 +102,7 @@ function movefile(sampleFile, res) {
 
 app.listen(PORT, () => {
   console.log('Listening on port:', PORT, 'use CTRL+C to close.')
+  console.log('Server started:', new Date());
   console.log('Currently running on', serverVersion)
 })
 
