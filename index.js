@@ -1,10 +1,11 @@
 'use strict';
 
-const serverVersion = ('Version 1.11');
+const serverVersion = ('Version 1.14');
 
 const fs = require('fs');
 const path = require('path');
 const express = require('express')
+// const http = require('http').Server(app);
 const app = express()
 const bodyParser = require('body-parser')
 const cors = require('cors');
@@ -12,11 +13,15 @@ const fileUpload = require('express-fileupload');
 const readline = require('readline');
 const ffmetadata = require("ffmetadata");
 const cmd = require('node-cmd');
+const resourceRouter = require('./router.js');
+const test = require('./test.js');
 const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(fileUpload());
+
+app.use('/', resourceRouter);
 
 var dir = './public/music';
 if (!fs.existsSync(dir)) {
@@ -24,20 +29,22 @@ if (!fs.existsSync(dir)) {
 }
 
 let musicList = []
+module.exports = musicList
 let musicOBJ = []
+module.exports = musicOBJ
+
 
 // static files
-app.use(express.static('./public'));
+// app.use(express.static('./public'));
 
-app.get('/', (req, res) => {
-  res.sendFile('public/index.html', { root: './public' });
-})
+// app.get('/', (req, res) => {
+//   res.sendFile('public/index.html', { root: './public' });
+// })
 
-app.get('/api/admin/update', (req, res) => {
-  res.status(200).send('Updating to: ' + serverVersion);
-  // res.status(200).send('Updating to:');
-  update();
-})
+// app.get('/api/admin/update', (req, res) => {
+//   res.status(200).send('Updating to: ' + serverVersion);
+//   update();
+// })
 
 app.route('/api/audio/:audio').get((req, res) => {
   let filePath = '';
@@ -85,6 +92,7 @@ function movefile(sampleFile, res) {
     let fileSizeInBytes = stats.size;
 
     musicList = fs.readdirSync('public/music');
+    scanFolder();
     console.log('file move complete')
     // return res.status(201).send('file upload sucess');
     return res.status(201).send(`${sampleFile.name} Uploaded!  ${fileSizeInBytes} Bytes`);
@@ -94,6 +102,7 @@ function movefile(sampleFile, res) {
 
 app.listen(PORT, () => {
   console.log('Listening on port:', PORT, 'use CTRL+C to close.')
+  console.log('Currently running on', serverVersion)
 })
 
 // Admin console commands
@@ -211,3 +220,4 @@ function saveToJSON(fileList) {
 }
 
 scanFolder();
+module.exports = musicOBJ;
