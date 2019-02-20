@@ -3,7 +3,6 @@ const url = window.location.href
 const audioAPI = "api/audio/"
 const trackAPI = "api/tracklist/"
 let trackList = [];
-let played = 0;
 let playedList = [];
 let shuffle = true;
 let currentTrack = {};
@@ -26,7 +25,6 @@ let playTrack = function (track) {
   currentTrack = track;
   setMetadata();
   audioPlayer.load();
-  played++
 };
 
 function chooseTrack() {
@@ -38,8 +36,13 @@ function chooseTrack() {
 };
 
 function playlist() {
-  playTrack(trackList[played]);
-  if (played === trackList.length) { played = 0 }
+  let toPlay = playedList.length
+  if (playedList.length >= trackList.length) { // Resets playlist back to top of list.
+    let playedTimes = Math.floor(playedList.length / trackList.length);
+    let remainder = playedList.length - (trackList.length * playedTimes);
+    toPlay = remainder
+  }
+  playTrack(trackList[toPlay]);
 }
 
 function random() {
@@ -202,6 +205,7 @@ volumeMute.onclick = function () {
 
 let playMode = document.getElementById("mode")
 playMode.onclick = function () {
+  playedList = [];
   shuffle = !shuffle
   modeButtonIcon();
 }
@@ -300,7 +304,7 @@ function toHHMMSS(secs) {
   var hours = Math.floor(sec_num / 3600) % 24
   var minutes = Math.floor(sec_num / 60) % 60
   var seconds = sec_num % 60
-  if (hours + minutes + seconds !== hours + minutes + seconds) {
+  if (hours + minutes + seconds !== hours + minutes + seconds) { // Checks for NaN
     return [0, 0, 0]
       .map(v => v < 10 ? "0" + v : v)
       .filter((v, i) => v !== "00" || i > 0)
