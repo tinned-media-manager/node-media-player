@@ -63,11 +63,13 @@ function uploadComplete() {
   document.getElementById("fileInfo").innerHTML = "";
   let liEm = document.createElement("li");
   let info = document.createTextNode("Upload Complete!");
-  liEm.appendChild(info);
+  liEm.appendChild(info);playedList
   document.getElementById("fileInfo").appendChild(liEm);
 };
 
 $('#uploadYouTube').bind('change', function () {
-  let url = document.getElementById("ty-url")
-  document.getElementById("uploadYouTube").action = '/api/ytupload'
+  // let url = document.getElementById("ytURL")
+  // let toBase64 = btoa(url);
+  // console.log('url to base64:', toBase64)
+  document.getElementById("uploadYouTube").action = `/api/ytupload`
 });

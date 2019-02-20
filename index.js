@@ -13,6 +13,7 @@ const fileUpload = require('express-fileupload');
 const readline = require('readline');
 const ffmetadata = require("ffmetadata");
 const cmd = require('node-cmd');
+const Base64 = require('js-base64').Base64;
 var YoutubeMp3Downloader = require("youtube-mp3-downloader");
 
 const resourceRouter = require('./router.js');
@@ -69,8 +70,10 @@ app.route('/api/tracklist/').get((req, res) => {
 });
 
 app.post('/api/ytupload', function (req, res) {
-  console.log('saving youtube audio:', req)
-  downloadYoutubeMP3(req);
+  console.log('saving youtube audio:', req.body.ytURL)
+  // let fromBase64 = Base64.decode(req.body)
+  // console.log('saving youtube audio:', fromBase64)
+  downloadYoutubeMP3(req.body.ytURL);
   return res.status(201).send("youtube audio downloaded");
   // console.log('sending: ', `music/${filePath}${req.params.audio}`)
   // res.set('Content-Type', 'audio/mpeg');
@@ -236,7 +239,7 @@ scanFolder();
 // Youtube music download
 var YD = new YoutubeMp3Downloader({
   "ffmpegPath": "/usr/bin/ffmpeg",        // Where is the FFmpeg binary located?
-  "outputPath": "/home/nadpro/Music",    // Where should the downloaded and encoded files be stored?
+  "outputPath": dir,    // Where should the downloaded and encoded files be stored?
   "youtubeVideoQuality": "highest",       // What video quality should be used?
   "queueParallelism": 2,                  // How many parallel downloads/encodes should be started?
   "progressTimeout": 2000                 // How long should be the interval of the progress reports
@@ -261,5 +264,11 @@ function downloadYoutubeMP3(url){
 }
 
 // downloadYoutubeMP3("https://www.youtube.com/watch?v=BY5WE66YKcU");
+
+// let testString = 'I am some test text';
+// let toBase64 = Base64.encode(testString);
+// console.log('to B64:', toBase64);
+// let fromBase64 = Base64.decode(toBase64);
+// console.log('from B64:', fromBase64);
 
 module.exports = musicOBJ;
