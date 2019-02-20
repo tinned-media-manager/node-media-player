@@ -11,9 +11,12 @@ let volume = 1;
 let noRepeat = 10
 
 // Gets the full track list from server API
-$.get(window.location.href + trackAPI, function (data) {
-  trackList = JSON.parse(data);
-});
+function getTrackList() {
+  $.get(window.location.href + trackAPI, function (data) {
+    trackList = JSON.parse(data);
+  });
+};
+getTrackList();
 
 // Player functions
 let playTrack = function (track) {
@@ -41,9 +44,9 @@ function playlist() {
 
 function random() {
   let playing = Math.floor(Math.random() * trackList.length)
-  if (playedList.length > noRepeat){
-    for (let i = playedList.length - noRepeat; i < playedList.length; i++){
-      if (trackList[playing].filename === playedList[i]){
+  if (playedList.length > noRepeat) {
+    for (let i = playedList.length - noRepeat; i < playedList.length; i++) {
+      if (trackList[playing].filename === playedList[i]) {
         playing = Math.floor(Math.random() * trackList.length)
       }
     }
@@ -58,7 +61,7 @@ function playPreviousTrack() {
   playedList.pop()
 }
 
-function skipForward(){
+function skipForward() {
   audioPlayer.currentTime = audioPlayer.currentTime + 10;
 }
 
@@ -67,9 +70,9 @@ function rewindBack() {
 }
 
 function volumeLevel() {
-  let progress = document.getElementById("volume-level"); 
+  let progress = document.getElementById("volume-level");
   let width = audioPlayer.volume * 100;
-  progress.style.width = width + '%'; 
+  progress.style.width = width + '%';
 };
 
 function audioVolumeUp() {
@@ -81,15 +84,15 @@ function audioVolumeUp() {
 }
 
 function audioVolumeDown() {
-  if (audioPlayer.volume > .1){
+  if (audioPlayer.volume > .1) {
     audioPlayer.volume = audioPlayer.volume - .1;
   }
   volume = audioPlayer.volume;
   volumeLevel()
 }
 
-function mute(){
-  if (audioPlayer.volume === 0){
+function mute() {
+  if (audioPlayer.volume === 0) {
     audioPlayer.volume = volume;
     document.getElementById("volume-mute").innerHTML = '<i class="fas fa-volume-mute"></i>'
   } else {
@@ -268,10 +271,10 @@ function setMetadata() {
     navigator.mediaSession.setActionHandler('pause', function () {
       playPauseTrack();
     });
-    navigator.mediaSession.setActionHandler('seekbackward', function() {
+    navigator.mediaSession.setActionHandler('seekbackward', function () {
       skipForward();
     });
-    navigator.mediaSession.setActionHandler('seekforward', function() {
+    navigator.mediaSession.setActionHandler('seekforward', function () {
       rewindBack();
     });
     navigator.mediaSession.setActionHandler('previoustrack', function () {
@@ -286,24 +289,31 @@ function setMetadata() {
 
 // Media player dynamic content
 function trackProgressBar() {
-  let progress = document.getElementById("track-progress-bar"); 
+  let progress = document.getElementById("track-progress-bar");
   let width = 0;
   width = Math.floor((audioPlayer.currentTime / audioPlayer.duration) * 100);
-  progress.style.width = width + '%'; 
+  progress.style.width = width + '%';
 };
 
-function toHHMMSS (secs) {
-  var sec_num = parseInt(secs, 10)    
-  var hours   = Math.floor(sec_num / 3600) % 24
+function toHHMMSS(secs) {
+  var sec_num = parseInt(secs, 10)
+  var hours = Math.floor(sec_num / 3600) % 24
   var minutes = Math.floor(sec_num / 60) % 60
-  var seconds = sec_num % 60    
-  return [hours,minutes,seconds]
+  var seconds = sec_num % 60
+  if (hours + minutes + seconds !== hours + minutes + seconds) {
+    return [0, 0, 0]
       .map(v => v < 10 ? "0" + v : v)
-      .filter((v,i) => v !== "00" || i > 0)
+      .filter((v, i) => v !== "00" || i > 0)
       .join(":")
+  } else {
+    return [hours, minutes, seconds]
+      .map(v => v < 10 ? "0" + v : v)
+      .filter((v, i) => v !== "00" || i > 0)
+      .join(":")
+  }
 }
 
-setInterval(function(){ 
+setInterval(function () {
   trackProgressBar()
   document.getElementById("track-time").innerHTML = `${toHHMMSS(audioPlayer.currentTime)} / ${toHHMMSS(audioPlayer.duration)}`;
 }, 500);

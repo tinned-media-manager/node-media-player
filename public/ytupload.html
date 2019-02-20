@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="shortcut icon" href="music-note.png" type="image/x-icon" />
+  <link rel="stylesheet" type="text/css" href="assets/css/reset.css">
+  <link rel="stylesheet" type="text/css" href="assets/css/all.css">
+  <link rel="stylesheet" type="text/css" href="assets/css/main.css">
+  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
+  <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+  <script src="assets/js/jquery-3.3.1.min.js"></script>
+  <title>SHSMS</title>
+</head>
+
+<body>
+  <form ref="uploadYouTube" id="uploadYouTube" method="POST" encType="multipart/form-data">
+    <!-- <input name="sampleFile" type="file" multiple /> -->
+    <input name="ty-url" type="text">
+    <br>
+    <input id="upload" type="submit" value="Upload!" />
+    <!-- <progress id="progressBar" value="0" max="100" style="width:300px;"></progress> -->
+    <!-- <h3 id="status"></h3> -->
+    <!-- <p id="loaded_n_total"></p> -->
+  </form>
+  <!-- <div>
+    <ul id="fileInfo">
+    </ul>
+  </div> -->
+
+
+  <script defer src="assets/js/all.js"></script>
+  <script src="assets/js/upload.js"></script>
+</body>
+
+</html>

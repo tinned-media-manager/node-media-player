@@ -66,3 +66,8 @@ function uploadComplete() {
   liEm.appendChild(info);
   document.getElementById("fileInfo").appendChild(liEm);
 };
+
+$('#uploadYouTube').bind('change', function () {
+  let url = document.getElementById("ty-url")
+  document.getElementById("uploadYouTube").action = '/api/ytupload'
+});
