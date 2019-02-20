@@ -110,12 +110,20 @@ function playPauseTrack() {
   }
 }
 
-function modeButtonIcon () {
+function modeButtonIcon() {
   if (shuffle === true) {
     document.getElementById("mode").innerHTML = '<i class="fas fa-list-ul"></i>'
   } else {
     document.getElementById("mode").innerHTML = '<i class="fas fa-random"></i>'
   }
+}
+
+function loopTrack() {
+
+}
+
+function restartTrack() {
+  audioPlayer.currentTime = 0;
 }
 
 function domTrackList() {
@@ -167,6 +175,11 @@ forwardTrack.onclick = function () {
 let rewindTrack = document.getElementById("rewind");
 rewindTrack.onclick = function () {
   rewindBack();
+}
+
+let replayTrack = document.getElementById("restart");
+replayTrack.onclick = function () {
+  restartTrack();
 }
 
 let volumeUp = document.getElementById("volume-up");

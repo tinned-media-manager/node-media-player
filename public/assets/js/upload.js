@@ -4,17 +4,14 @@ let fileSize = 0;
 let fileSymb = '';
 let uploadProgress = 0;
 
-let uploadRequest = document.getElementById("extUpload");
-uploadRequest.onclick = function () {
-  alert("upload a file")
-};
-
 // alert(<button>test button</button>)
 $('#uploadForm').bind('change', function () {
   // clear file info when new file is selected
   document.getElementById("fileInfo").innerHTML = "";
   // sets upload url dynamically based on server connection
-  document.getElementById("uploadForm").action = window.location.href + 'api/upload'
+  // document.getElementById("uploadForm").action = window.location.href + '/api/upload'
+  document.getElementById("uploadForm").action = '/api/upload'
+
   // gets file information
   let uploadFileName = this[0].files[0].name;
   let uploadFileSize = this[0].files[0].size;
