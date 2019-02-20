@@ -4,11 +4,6 @@ let fileSize = 0;
 let fileSymb = '';
 let uploadProgress = 0;
 
-// let uploadRequest = document.getElementById("extUpload");
-// uploadRequest.onclick = function () {
-//   alert("upload a file")
-// };
-
 // alert(<button>test button</button>)
 $('#uploadForm').bind('change', function () {
   // clear file info when new file is selected
