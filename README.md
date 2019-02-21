@@ -34,6 +34,7 @@ sudo apt-get install ffmpeg
 - [X] Restart track from beginning function.
 - [X] Download and extract audio from youtube.
 - [X] Custom file name and folder for youtube audio.
+- [X] Refactor code to modules.
 
 ## resources
 - https://fontawesome.com/icons?d=gallery&c=audio-video&m=free

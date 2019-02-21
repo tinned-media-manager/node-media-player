@@ -1,24 +1,20 @@
 'use strict';
 
-const serverVersion = ('Version 1.18');
-
 const fs = require('fs');
 const path = require('path');
-const express = require('express')
-// const http = require('http').Server(app);
-const app = express()
-const bodyParser = require('body-parser')
+const express = require('express');
+const app = express();
+const bodyParser = require('body-parser');
 const cors = require('cors');
 const fileUpload = require('express-fileupload');
 const readline = require('readline');
 const ffmetadata = require("ffmetadata");
 const cmd = require('node-cmd');
 const Base64 = require('js-base64').Base64;
-var YoutubeMp3Downloader = require("youtube-mp3-downloader");
 
+const server = require('./index.js');
 const resourceRouter = require('./router.js');
 const storage = require ('./storage.js');
-const test = require('./test.js');
 const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -27,101 +23,15 @@ app.use(fileUpload());
 
 app.use('/', resourceRouter);
 
-var dir = './public/music';
-if (!fs.existsSync(dir)) {
-  fs.mkdirSync(dir);
-}
-
-let musicList = []
-// module.exports = musicList
-let musicOBJ = storage.musicOBJ
-// module.exports = musicOBJ
-
-
-// static files
-// app.use(express.static('./public'));
-
-// app.get('/', (req, res) => {
-//   res.sendFile('public/index.html', { root: './public' });
-// })
-
-// app.get('/api/admin/update', (req, res) => {
-//   res.status(200).send('Updating to: ' + serverVersion);
-//   update();
-// })
-
-app.route('/api/audio/:audio').get((req, res) => {
-  let filePath = '';
-  for (let i = 0; i < musicOBJ.length; i++) {
-    if (JSON.parse(musicOBJ)[i].filename === req.params.audio) {
-      if (JSON.parse(musicOBJ)[i].folderpath === '') {
-        break
-      }
-      filePath = JSON.parse(musicOBJ)[i].folderpath + '/'
-      break;
-    }
-  }
-  console.log('sending: ', `music/${filePath}${req.params.audio}`)
-  res.set('Content-Type', 'audio/mpeg');
-  res.sendFile(`music/${filePath}${req.params.audio}`, { root: './public' });
-});
-
-app.route('/api/tracklist/').get((req, res) => {
-  res.send(musicOBJ);
-});
-
-app.post('/api/ytupload', function (req, res) {
-  console.log('saving youtube url:', req.body.ytURL)
-  console.log('saving youtube name:', req.body.ytName)
-  console.log('saving youtube folder:', req.body.ytFolder)
-  // let fromBase64 = Base64.decode(req.body)
-  // console.log('saving youtube audio:', fromBase64)
-  downloadYoutubeMP3(req.body, res);
-  // return res.status(201).send("youtube audio downloaded");
-  // console.log('sending: ', `music/${filePath}${req.params.audio}`)
-  // res.set('Content-Type', 'audio/mpeg');
-  // res.sendFile(`music/${filePath}${req.params.audio}`, { root: './public' });
-});
-
-// express-fileupload application.
-app.post('/api/upload', function (req, res) {
-  if (!req.files) {
-    return res.status(400).send('No files were uploaded.');
-  }
-  // The name of the input field (i.e "sampleFile") is used to retrieve the uploaded file.
-  let sampleFile = req.files.sampleFile;
-  movefile(sampleFile, res);
-
-  console.log('sending 201 status')
-  // return res.status(201).send('file upload sucess');
-  // return res.status(201);
-});
-
-function movefile(sampleFile, res) {
-  // use the mv() method to place the file somewhere on your server.
-  sampleFile.mv(`./public/music/${sampleFile.name}`, function (err) {
-    console.log('file moving', sampleFile);
-    if (err) {
-      return res.status(500).send(err);
-    }
-    // checks the file size
-    let stats = fs.statSync(`./public/music/${sampleFile.name}`);
-    let fileSizeInBytes = stats.size;
-
-    musicList = fs.readdirSync('public/music');
-    scanFolder();
-    console.log('file move complete')
-    // return res.status(201).send('file upload sucess');
-    return res.status(201).send(`${sampleFile.name} Uploaded!  ${fileSizeInBytes} Bytes`);
-    // return res.sendStatus(200);
-  });
-}
+if (!fs.existsSync(storage.dir)) {
+  fs.mkdirSync(stoarage.dir);
+};
 
 app.listen(PORT, () => {
   console.log('Listening on port:', PORT, 'use CTRL+C to close.')
   console.log('Server started:', new Date());
-  console.log('Currently running on', serverVersion)
-})
+  console.log('Currently running on', storage.serverVersion)
+});
 
 // Admin console commands
 const rl = readline.createInterface({
@@ -131,14 +41,12 @@ const rl = readline.createInterface({
 
 rl.on('line', (input) => {
   if (input === 'print list') {
-    console.log(musicList);
+    console.log(storage.musicList);
   } else if (input === 'scan folder') {
-    scanFolder();
+    storage.scanFolder();
   } else if (input === 'version') {
-    console.log(serverVersion);
+    console.log(storage.serverVersion);
   } else if (input === 'update') {
-   update(); 
-  } else if (input === 'p') {
     update(); 
   } else {
     console.log(input, 'is not a valid input')
@@ -146,133 +54,21 @@ rl.on('line', (input) => {
 });
 
 // update from github master
-function update(){
+exports.update = function(){
   cmd.get('git pull origin master'),
   function (err, data, stderr) {
     if (err) {
       console.log(err);
     }
     console.log(data);
-  }
+  };
   cmd.get('npm install -y'),
   function (err, data, stderr) {
     if (err) {
       console.log(err);
     }
     console.log(data);
-  }
-}
-
-
-// Process files and folders.
-var walk = function (dir, done) {
-  var results = [];
-  fs.readdir(dir, function (err, list) {
-    if (err) return done(err);
-    var pending = list.length;
-    if (!pending) return done(null, results);
-    list.forEach(function (file) {
-      file = path.resolve(dir, file);
-      fs.stat(file, function (err, stat) {
-        if (stat && stat.isDirectory()) {
-          walk(file, function (err, res) {
-            results = results.concat(res);
-            if (!--pending) done(null, results);
-          });
-        } else {
-          results.push(file);
-          if (!--pending) done(null, results);
-        }
-      });
-    });
-  });
+  };
 };
 
-function scanFolder() {
-  walk(dir, function (err, results) {
-    if (err) throw err;
-    let processed = [];
-
-    for (let i = 0; i < results.length; i++) {
-      let splitting = results[i].split('/');
-      let processing = [];
-      for (let j = 0; j < splitting.length; j++) {
-        if (j < splitting.indexOf('music') + 1) {
-          delete splitting[j];
-        } else {
-          processing.push(splitting[j]);
-        };
-      }
-      processed.push(processing.join('+'));
-    }
-    musicList = processed
-    saveToJSON(musicList);
-  });
-}
-
-function saveToJSON(fileList) {
-  let toObject = [];
-  for (let i = 0; i < fileList.length; i++) {
-    let folderFileSplit = fileList[i].split('+');
-    let fileName = folderFileSplit[folderFileSplit.length - 1];
-    folderFileSplit.pop();
-    let folderPath = folderFileSplit.join('/');
-    let metaData = {};
-
-    let file = {
-      filename: fileName,
-      folderpath: folderPath,
-      metadata: metaData,
-    }
-
-    toObject.push(file);
-  }
-
-  musicOBJ = JSON.stringify(toObject)
-  fs.writeFile("./public/master-list.json", JSON.stringify(toObject), 'utf8', function (err) {
-    if (err) {
-      return console.log(err);
-    }
-    console.log("The file was saved!");
-  });
-}
-
-scanFolder();
-
-// Youtube music download
-function downloadYoutubeMP3(body, res){
-  let url = body.ytURL.split('watch?v=')[1];
-  let name = body.ytName + '.mp3';
-  let folder = body.ytFolder
-
-  var YD = new YoutubeMp3Downloader({
-    "ffmpegPath": "/usr/bin/ffmpeg",  // Where is the FFmpeg binary located?
-    "outputPath": dir + '/' + folder, // Where should the downloaded and encoded files be stored?
-    "youtubeVideoQuality": "highest", // What video quality should be used?
-    "queueParallelism": 2,            // How many parallel downloads/encodes should be started?
-    "progressTimeout": 2000           // How long should be the interval of the progress reports
-  });
-
-  console.log('Youtube URL:', url)
-  if(name === '.mp3'){ // Checks if user used custom name
-    YD.download(url);
-  } else {
-    YD.download(url, name);
-  }
-  
-  YD.on("error", function(error) {
-    console.log(error);
-  });
-  
-  YD.on("progress", function(progress) {
-    console.log(JSON.stringify(progress));
-  });
-
-  YD.on("finished", function(err, data) {
-    console.log(JSON.stringify(data));
-    scanFolder()
-    return res.status(201).send("youtube audio downloaded");
-  });
-}
-
-console.log('test module:', test.testVariable);
+storage.scanFolder();
