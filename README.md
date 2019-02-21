@@ -2,6 +2,9 @@
 
 ## MP3 music files are stored in the public/muic folder
 
+## Dependencys
+sudo apt-get install ffmpeg
+
 ## Functionallity
 - [X] Basic music player that can play a list of MP3's.
 - [X] Set up API to host files to music player.
@@ -31,6 +34,7 @@
 - [X] Restart track from beginning function.
 - [X] Download and extract audio from youtube.
 - [X] Custom file name and folder for youtube audio.
+- [X] Refactor code to modules.
 
 ## resources
 - https://fontawesome.com/icons?d=gallery&c=audio-video&m=free
