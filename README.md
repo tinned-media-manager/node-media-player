@@ -29,6 +29,8 @@
 - [X] Keyboard shortcut controls.
 - [X] Prevent repeat plays within an ammount of plays for random.
 - [X] Restart track from beginning function.
+- [X] Download and extract audio from youtube.
+- [X] Custom file name and folder for youtube audio.
 
 ## resources
 - https://fontawesome.com/icons?d=gallery&c=audio-video&m=free

@@ -70,11 +70,13 @@ app.route('/api/tracklist/').get((req, res) => {
 });
 
 app.post('/api/ytupload', function (req, res) {
-  console.log('saving youtube audio:', req.body.ytURL)
+  console.log('saving youtube url:', req.body.ytURL)
+  console.log('saving youtube name:', req.body.ytName)
+  console.log('saving youtube folder:', req.body.ytFolder)
   // let fromBase64 = Base64.decode(req.body)
   // console.log('saving youtube audio:', fromBase64)
-  downloadYoutubeMP3(req.body.ytURL);
-  return res.status(201).send("youtube audio downloaded");
+  downloadYoutubeMP3(req.body, res);
+  // return res.status(201).send("youtube audio downloaded");
   // console.log('sending: ', `music/${filePath}${req.params.audio}`)
   // res.set('Content-Type', 'audio/mpeg');
   // res.sendFile(`music/${filePath}${req.params.audio}`, { root: './public' });
@@ -237,19 +239,26 @@ function saveToJSON(fileList) {
 scanFolder();
 
 // Youtube music download
-var YD = new YoutubeMp3Downloader({
-  "ffmpegPath": "/usr/bin/ffmpeg",        // Where is the FFmpeg binary located?
-  "outputPath": dir,    // Where should the downloaded and encoded files be stored?
-  "youtubeVideoQuality": "highest",       // What video quality should be used?
-  "queueParallelism": 2,                  // How many parallel downloads/encodes should be started?
-  "progressTimeout": 2000                 // How long should be the interval of the progress reports
-});
+function downloadYoutubeMP3(body, res){
+  let url = body.ytURL.split('watch?v=')[1];
+  let name = body.ytName + '.mp3';
+  let folder = body.ytFolder
 
-function downloadYoutubeMP3(url){
-  url = url.split('watch?v=')[1];
+  var YD = new YoutubeMp3Downloader({
+    "ffmpegPath": "/usr/bin/ffmpeg",  // Where is the FFmpeg binary located?
+    "outputPath": dir + '/' + folder, // Where should the downloaded and encoded files be stored?
+    "youtubeVideoQuality": "highest", // What video quality should be used?
+    "queueParallelism": 2,            // How many parallel downloads/encodes should be started?
+    "progressTimeout": 2000           // How long should be the interval of the progress reports
+  });
+
   console.log('Youtube URL:', url)
-  YD.download(url);
-
+  if(name === '.mp3'){ // Checks if user used custom name
+    YD.download(url);
+  } else {
+    YD.download(url, name);
+  }
+  
   YD.on("error", function(error) {
     console.log(error);
   });
@@ -260,6 +269,8 @@ function downloadYoutubeMP3(url){
 
   YD.on("finished", function(err, data) {
     console.log(JSON.stringify(data));
+    scanFolder()
+    return res.status(201).send("youtube audio downloaded");
   });
 }
 

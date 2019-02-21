@@ -15,11 +15,17 @@
   <title>SHSMS</title>
 </head>
 
-<body>
+<body background="img/ytDownload-bg.jpg">
+    <h1>Youtube Audio Downloader</h1>
+    <p>URL is required.<br>
+        If Name is empty the downloader will use the name from youtube for the filename.<br>
+        If Folder filed is left epmpty the file will be saved to the Music folder.</p><br>
+
   <form ref="uploadYouTube" id="uploadYouTube" method="POST" encType="multipart/form-data">
-    <input name="ytURL" type="text">
-    <br>
-    <input id="upload" type="submit" value="Upload!" />
+    <p>YouTube URL:<input id="ytURL" name="ytURL" type="text" placeholder="Paste link here"></p><br>
+    <p>Name:<input id="ytName" name="ytName" type="text" placeholder="Name to save file"></p><br>
+    <p>Folder:<input id="ytFolder" name="ytFolder" type="text" placeholder="Folder to save file in"></p><br>
+    <input id="upload" type="submit" value="Save" />
   </form>
 
 
