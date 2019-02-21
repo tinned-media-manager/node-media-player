@@ -29,7 +29,13 @@
 - [X] Keyboard shortcut controls.
 - [X] Prevent repeat plays within an ammount of plays for random.
 - [X] Restart track from beginning function.
+- [X] Download and extract audio from youtube.
+- [X] Custom file name and folder for youtube audio.
 
 ## resources
 - https://fontawesome.com/icons?d=gallery&c=audio-video&m=free
 - https://developers.google.com/web/updates/2017/02/media-session
+- https://www.npmjs.com/package/youtube-mp3-downloader
+
+## YT audio to download
+- https://www.youtube.com/watch?v=nk1dsHFOEy8&list=RDg2_chjr4Zmo&index=27

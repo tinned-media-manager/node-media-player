@@ -16,6 +16,8 @@
     "express-fileupload": "^1.1.1-alpha.1",
     "ffmetadata": "^1.5.0",
     "fs": "0.0.1-security",
-    "node-cmd": "^3.0.0"
+    "js-base64": "^2.5.1",
+    "node-cmd": "^3.0.0",
+    "youtube-mp3-downloader": "^0.5.3"
   }
 }
