@@ -1,6 +1,6 @@
 'use strict';
 
-const serverVersion = ('Version 1.17');
+const serverVersion = ('Version 1.18');
 
 const fs = require('fs');
 const path = require('path');
@@ -17,6 +17,7 @@ const Base64 = require('js-base64').Base64;
 var YoutubeMp3Downloader = require("youtube-mp3-downloader");
 
 const resourceRouter = require('./router.js');
+const storage = require ('./storage.js');
 const test = require('./test.js');
 const PORT = process.env.PORT || 3000;
 app.use(cors());
@@ -32,9 +33,9 @@ if (!fs.existsSync(dir)) {
 }
 
 let musicList = []
-module.exports = musicList
-let musicOBJ = []
-module.exports = musicOBJ
+// module.exports = musicList
+let musicOBJ = storage.musicOBJ
+// module.exports = musicOBJ
 
 
 // static files
@@ -274,12 +275,4 @@ function downloadYoutubeMP3(body, res){
   });
 }
 
-// downloadYoutubeMP3("https://www.youtube.com/watch?v=BY5WE66YKcU");
-
-// let testString = 'I am some test text';
-// let toBase64 = Base64.encode(testString);
-// console.log('to B64:', toBase64);
-// let fromBase64 = Base64.decode(toBase64);
-// console.log('from B64:', fromBase64);
-
-module.exports = musicOBJ;
+console.log('test module:', test.testVariable);

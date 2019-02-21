@@ -2,12 +2,13 @@
 
 const express = require('express');
 const Router = express.Router;
-const server = require('./index.js').musicOBJ;
+// const server = require('./index.js');
 // const createError = require('http-errors');
 
 const resourceRouter = new Router();
 
-let musicOBJ = server;
+// let musicOBJ = server;
+// let serverVersion = ;
 
 resourceRouter.use(express.static('./public'));
 
@@ -16,8 +17,9 @@ resourceRouter.get('/', (req, res) => {
 })
 
 resourceRouter.get('/api/admin/update', (req, res) => {
-  res.status(200).send('Updating to: ' + serverVersion);
-  update();
+  console.log('Updating to: ' + server.serverVersion);
+  // res.status(200).send('Updating to: ' + serverVersion);
+  // update();
 })
 
 // resourceRouter.route('/api/audio/:audio').get((req, res) => {
