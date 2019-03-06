@@ -18,7 +18,8 @@
 <body>
   <form ref="uploadForm" id="uploadForm" method="POST" encType="multipart/form-data">
     <input name="sampleFile" type="file" multiple />
-    <br>
+    <p>Name:<input id="ytName" name="ytName" type="text" placeholder="Custom file name"></p><br>
+    <p>Folder:<input id="ytFolder" name="ytFolder" type="text" placeholder="Coose folder"></p><br>
     <input id="upload" type="submit" value="Upload!" onclick="uploadMonitor();" />
     <progress id="progressBar" value="0" max="100" style="width:300px;"></progress>
     <h3 id="status"></h3>

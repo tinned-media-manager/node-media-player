@@ -1,7 +1,7 @@
 'use strict';
 
 const fs = require('fs');
-const path = require('path');
+// const path = require('path');
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
@@ -24,8 +24,8 @@ app.use(fileUpload());
 app.use('/', resourceRouter);
 
 if (!fs.existsSync(storage.dir)) {
-  fs.mkdirSync(stoarage.dir);
-};
+  fs.mkdirSync(storage.dir);
+}
 
 app.listen(PORT, () => {
   console.log('Listening on port:', PORT, 'use CTRL+C to close.')
@@ -42,12 +42,14 @@ const rl = readline.createInterface({
 rl.on('line', (input) => {
   if (input === 'print list') {
     console.log(storage.musicList);
+  } else if (input === 'print object') {
+    console.log(storage.musicOBJ);
   } else if (input === 'scan folder') {
     storage.scanFolder();
   } else if (input === 'version') {
     console.log(storage.serverVersion);
   } else if (input === 'update') {
-    update(); 
+    server.update(); 
   } else {
     console.log(input, 'is not a valid input')
   };

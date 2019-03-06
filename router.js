@@ -11,26 +11,26 @@ resourceRouter.use(express.static('./public'));
 
 resourceRouter.get('/', (req, res) => {
   res.sendFile('public/index.html', { root: './public' });
-})
+});
 
 resourceRouter.get('/api/admin/update', (req, res) => {
   console.log('Updating to: ' + storage.serverVersion);
   res.status(200).send('Updating to: ' + storage.serverVersion);
   server.update();
-})
+});
 
 resourceRouter.route('/api/audio/:audio').get((req, res) => {
   let filePath = '';
   for (let i = 0; i < storage.musicOBJ.length; i++) {
     if (JSON.parse(storage.musicOBJ)[i].filename === req.params.audio) {
       if (JSON.parse(storage.musicOBJ)[i].folderpath === '') {
-        break
+        break;
       }
-      filePath = JSON.parse(storage.musicOBJ)[i].folderpath + '/'
+      filePath = JSON.parse(storage.musicOBJ)[i].folderpath + '/';
       break;
     }
   }
-  console.log('sending: ', `music/${filePath}${req.params.audio}`)
+  console.log('sending: ', `music/${filePath}${req.params.audio}`);
   res.set('Content-Type', 'audio/mpeg');
   res.sendFile(`music/${filePath}${req.params.audio}`, { root: './public' });
 });
@@ -40,9 +40,6 @@ resourceRouter.route('/api/tracklist/').get((req, res) => {
 });
 
 resourceRouter.post('/api/ytupload', function (req, res) {
-  console.log('saving youtube url:', req.body.ytURL)
-  console.log('saving youtube name:', req.body.ytName)
-  console.log('saving youtube folder:', req.body.ytFolder)
   storage.downloadYoutubeMP3(req.body, res);
 });
 
@@ -53,7 +50,7 @@ resourceRouter.post('/api/upload', function (req, res) {
   // The name of the input field (i.e "sampleFile") is used to retrieve the uploaded file.
   let sampleFile = req.files.sampleFile;
   storage.movefile(sampleFile, res);
-  console.log('sending 201 status')
+  console.log('sending 201 status');
 });
 
 module.exports = resourceRouter;

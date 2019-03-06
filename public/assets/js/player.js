@@ -7,20 +7,20 @@ let playedList = [];
 let shuffle = true;
 let currentTrack = {};
 let volume = 1;
-let noRepeat = 10
+let noRepeat = 10;
 
 // Gets the full track list from server API
 function getTrackList() {
   $.get(window.location.href + trackAPI, function (data) {
     trackList = JSON.parse(data);
   });
-};
+}
 getTrackList();
 
 // Player functions
 let playTrack = function (track) {
   document.getElementById("playing-track").innerHTML = track.filename.split('.')[0];
-  document.getElementById("current").src = url + audioAPI + track.filename
+  document.getElementById("current").src = url + audioAPI + track.filename;
   playedList.push(track.filename);
   currentTrack = track;
   setMetadata();
@@ -33,24 +33,24 @@ function chooseTrack() {
   } else {
     playlist();
   }
-};
+}
 
 function playlist() {
-  let toPlay = playedList.length
+  let toPlay = playedList.length;
   if (playedList.length >= trackList.length) { // Resets playlist back to top of list.
     let playedTimes = Math.floor(playedList.length / trackList.length);
     let remainder = playedList.length - (trackList.length * playedTimes);
-    toPlay = remainder
+    toPlay = remainder;
   }
   playTrack(trackList[toPlay]);
 }
 
 function random() {
-  let playing = Math.floor(Math.random() * trackList.length)
+  let playing = Math.floor(Math.random() * trackList.length);
   if (playedList.length > noRepeat) {
     for (let i = playedList.length - noRepeat; i < playedList.length; i++) {
       if (trackList[playing].filename === playedList[i]) {
-        playing = Math.floor(Math.random() * trackList.length)
+        playing = Math.floor(Math.random() * trackList.length);
       }
     }
   }
@@ -58,10 +58,10 @@ function random() {
 }
 
 function playPreviousTrack() {
-  playedList.pop()
+  playedList.pop();
   let backTrack = { filename: playedList[playedList.length - 1] };
   playTrack(backTrack);
-  playedList.pop()
+  playedList.pop();
 }
 
 function skipForward() {
@@ -76,14 +76,14 @@ function volumeLevel() {
   let progress = document.getElementById("volume-level");
   let width = audioPlayer.volume * 100;
   progress.style.width = width + '%';
-};
+}
 
 function audioVolumeUp() {
   if (audioPlayer.volume < 1) {
     audioPlayer.volume = audioPlayer.volume + .1;
   }
   volume = audioPlayer.volume;
-  volumeLevel()
+  volumeLevel();
 }
 
 function audioVolumeDown() {
@@ -91,41 +91,41 @@ function audioVolumeDown() {
     audioPlayer.volume = audioPlayer.volume - .1;
   }
   volume = audioPlayer.volume;
-  volumeLevel()
+  volumeLevel();
 }
 
 function mute() {
   if (audioPlayer.volume === 0) {
     audioPlayer.volume = volume;
-    document.getElementById("volume-mute").innerHTML = '<i class="fas fa-volume-mute"></i>'
+    document.getElementById("volume-mute").innerHTML = '<i class="fas fa-volume-mute"></i>';
   } else {
-    volume = audioPlayer.volume
-    audioPlayer.volume = 0
-    document.getElementById("volume-mute").innerHTML = '<i class="fas fa-volume-off"></i>'
+    volume = audioPlayer.volume;
+    audioPlayer.volume = 0;
+    document.getElementById("volume-mute").innerHTML = '<i class="fas fa-volume-off"></i>';
   }
-  volumeLevel()
+  volumeLevel();
 }
 
 function playPauseTrack() {
   if (audioPlayer.paused && audioPlayer.currentTime > 0 && !audioPlayer.ended) {
     audioPlayer.play();
-    document.getElementById("pause").innerHTML = '<i class="fas fa-pause"></i>'
+    document.getElementById('pause').innerHTML = '<i class="fas fa-pause"></i>';
   } else {
     audioPlayer.pause();
-    document.getElementById("pause").innerHTML = '<i class="fas fa-play"></i>'
+    document.getElementById('pause').innerHTML = '<i class="fas fa-play"></i>';
   }
 }
 
 function modeButtonIcon() {
   if (shuffle === true) {
-    document.getElementById("mode").innerHTML = '<i class="fas fa-list-ul"></i>'
+    document.getElementById('mode').innerHTML = '<i class="fas fa-list-ul"></i>';
   } else {
-    document.getElementById("mode").innerHTML = '<i class="fas fa-random"></i>'
+    document.getElementById('mode').innerHTML = '<i class="fas fa-random"></i>';
   }
 }
 
 function loopTrack() {
-
+  console.log('Loop track selected');
 }
 
 function restartTrack() {
@@ -134,12 +134,12 @@ function restartTrack() {
 
 function domTrackList() {
   for (let i = 0; i < trackList.length; i++) {
-    let liEm = document.createElement("li");
+    let liEm = document.createElement('li');
     let info = document.createTextNode(trackList[i].filename.split('.')[0]);
     liEm.appendChild(info);
-    document.getElementById("track-list").appendChild(liEm).id = trackList[i].filename;
-  };
-};
+    document.getElementById('track-list').appendChild(liEm).id = trackList[i].filename;
+  }
+}
 
 window.onload = function () {
   chooseTrack();
@@ -152,83 +152,83 @@ window.onload = function () {
 };
 
 // Webpage DOM controls
-let audioPlayer = document.getElementById("audio-player")
-audioPlayer.addEventListener("ended", function () {
+let audioPlayer = document.getElementById('audio-player');
+audioPlayer.addEventListener('ended', function () {
   audioPlayer.currentTime = 0;
   chooseTrack();
 });
 
-let pauseTrack = document.getElementById("pause")
+let pauseTrack = document.getElementById('pause');
 pauseTrack.onclick = function () {
   playPauseTrack();
-}
+};
 
-let nextTrack = document.getElementById("next")
+let nextTrack = document.getElementById('next');
 nextTrack.onclick = function () {
   chooseTrack();
 };
 
-let previousTrack = document.getElementById("previous")
+let previousTrack = document.getElementById('previous');
 previousTrack.onclick = function () {
   playPreviousTrack();
 };
 
-let forwardTrack = document.getElementById("forward")
+let forwardTrack = document.getElementById('forward');
 forwardTrack.onclick = function () {
   skipForward();
-}
+};
 
-let rewindTrack = document.getElementById("rewind");
+let rewindTrack = document.getElementById('rewind');
 rewindTrack.onclick = function () {
   rewindBack();
 }
 
-let replayTrack = document.getElementById("restart");
+let replayTrack = document.getElementById('restart');
 replayTrack.onclick = function () {
   restartTrack();
-}
+};
 
-let volumeUp = document.getElementById("volume-up");
+let volumeUp = document.getElementById('volume-up');
 volumeUp.onclick = function () {
   audioVolumeUp();
-}
+};
 
-let volumeDown = document.getElementById("volume-down");
+let volumeDown = document.getElementById('volume-down');
 volumeDown.onclick = function () {
   audioVolumeDown();
-}
+};
 
-let volumeMute = document.getElementById("volume-mute");
+let volumeMute = document.getElementById('volume-mute');
 volumeMute.onclick = function () {
   mute();
-}
+};
 
-let playMode = document.getElementById("mode")
+let playMode = document.getElementById('mode');
 playMode.onclick = function () {
   playedList = [];
-  shuffle = !shuffle
+  shuffle = !shuffle;
   modeButtonIcon();
-}
+};
 
-let userSelectedTrack = document.getElementById("track-list");
+let userSelectedTrack = document.getElementById('track-list');
 userSelectedTrack.onclick = function (event) {
   for (let i = 0; i < trackList.length; i++) {
     if (event.target.id === trackList[i].filename) {
       playTrack(trackList[i]);
-    };
-  };
+    }
+  }
 };
 
 // Changes cursor from arrow to hand when hovering over music list on page.
 $(document).ready(function () {
   $('#track-list').click(function () {
-    var href = $(this).find("a").attr("href");
+    var href = $(this).find('a').attr('href');
     if (href) {
       window.location = href;
     }
   });
   $('#track-list').hover(function () {
-    $(this).css('cursor', 'pointer')
+    $(this).css('cursor', 'pointer');
   });
 });
 
@@ -293,31 +293,31 @@ function setMetadata() {
 
 // Media player dynamic content
 function trackProgressBar() {
-  let progress = document.getElementById("track-progress-bar");
+  let progress = document.getElementById('track-progress-bar');
   let width = 0;
   width = Math.floor((audioPlayer.currentTime / audioPlayer.duration) * 100);
   progress.style.width = width + '%';
-};
+}
 
 function toHHMMSS(secs) {
-  var sec_num = parseInt(secs, 10)
-  var hours = Math.floor(sec_num / 3600) % 24
-  var minutes = Math.floor(sec_num / 60) % 60
-  var seconds = sec_num % 60
+  var sec_num = parseInt(secs, 10);
+  var hours = Math.floor(sec_num / 3600) % 24;
+  var minutes = Math.floor(sec_num / 60) % 60;
+  var seconds = sec_num % 60;
   if (hours + minutes + seconds !== hours + minutes + seconds) { // Checks for NaN
     return [0, 0, 0]
-      .map(v => v < 10 ? "0" + v : v)
-      .filter((v, i) => v !== "00" || i > 0)
-      .join(":")
+      .map(v => v < 10 ? '0' + v : v)
+      .filter((v, i) => v !== '00' || i > 0)
+      .join(':');
   } else {
     return [hours, minutes, seconds]
-      .map(v => v < 10 ? "0" + v : v)
-      .filter((v, i) => v !== "00" || i > 0)
-      .join(":")
+      .map(v => v < 10 ? '0' + v : v)
+      .filter((v, i) => v !== '00' || i > 0)
+      .join(':');
   }
 }
 
 setInterval(function () {
-  trackProgressBar()
-  document.getElementById("track-time").innerHTML = `${toHHMMSS(audioPlayer.currentTime)} / ${toHHMMSS(audioPlayer.duration)}`;
+  trackProgressBar();
+  document.getElementById('track-time').innerHTML = `${toHHMMSS(audioPlayer.currentTime)} / ${toHHMMSS(audioPlayer.duration)}`;
 }, 500);
