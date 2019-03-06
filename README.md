@@ -1,4 +1,5 @@
-# Self hosted streaming music service.
+# Self Hosted Streaming Media Service.
+- Update 2019-03-05: Converting to a full media player supporting both Audio and Video sources. 
 
 ## MP3 music files are stored in the public/muic folder
 
@@ -35,6 +36,15 @@ sudo apt-get install ffmpeg
 - [X] Download and extract audio from youtube.
 - [X] Custom file name and folder for youtube audio.
 - [X] Refactor code to modules.
+- [ ] Refactor file scanning to load JSON files first.
+- [ ] Refactor file scanning to only take place when called.
+- [ ] Refactor storage to accomidate both Audio and Video sources.
+- [ ] Refactor home page to choose type of player to use.
+- [ ] Refactor Audio player to create elements on DOM dynamically from JS.
+- [ ] Add Video player to options.
+- [ ] Refactor Music to more genaric Media naming scheme.
+- [ ] Utilize HTML Local Storage element to store user perfrences.
+- [ ] Add login and password to maintain tracking of user specific prefrences. 
 
 ## resources
 - https://fontawesome.com/icons?d=gallery&c=audio-video&m=free
