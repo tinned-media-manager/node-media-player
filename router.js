@@ -30,9 +30,9 @@ resourceRouter.route('/api/audio/:audio').get((req, res) => {
       break;
     }
   }
-  console.log('sending: ', `music/${filePath}${req.params.audio}`);
+  console.log('sending: ', `${filePath}${req.params.audio}`);
   res.set('Content-Type', 'audio/mpeg');
-  res.sendFile(`music/${filePath}${req.params.audio}`, { root: './public' });
+  res.sendFile(`${filePath}${req.params.audio}`);
 });
 
 resourceRouter.route('/api/tracklist/').get((req, res) => {

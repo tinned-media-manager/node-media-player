@@ -4,12 +4,13 @@ const fs = require('fs');
 const path = require('path');
 const YoutubeMp3Downloader = require("youtube-mp3-downloader");
 const storage = require ('./storage.js');
+const fileFolder = '/media/Music/SHSMS/music';
 
-exports.serverVersion = ('Version 1.22');
+exports.serverVersion = ('Version 1.23');
 
 exports.musicOBJ = [];
 exports.musicList = [];
-exports.dir = './public/music';
+exports.dir = `${fileFolder}`;
 
 // Process files and folders.
 let walk = function (dir, done) {
@@ -63,18 +64,34 @@ function loadJSONfile(){
 function saveToJSON(fileList) {
   let toObject = [];
   for (let i = 0; i < fileList.length; i++) {
-    let folderFileSplit = fileList[i].split('+');
-    let fileName = folderFileSplit[folderFileSplit.length - 1];
-    folderFileSplit.pop();
-    let folderPath = folderFileSplit.join('/');
+    // console.log("***FILELSIT:", dir)
+    // let folderFileSplit = fileList[i].split('+');
+    // let fileName = folderFileSplit[folderFileSplit.length - 1];
+    // folderFileSplit.pop();
+    // let folderPath = folderFileSplit.join('/');
     let metaData = {};
     let file = {
-      filename: fileName,
-      folderpath: folderPath,
+      filename: fileList[i],
+      folderpath: fileFolder,
       metadata: metaData,
     };
     toObject.push(file);
   }
+
+  // for (let i = 0; i < fileList.length; i++) {
+  //   // console.log("***FILELSIT:", fileList[i])
+  //   let folderFileSplit = fileList[i].split('+');
+  //   let fileName = folderFileSplit[folderFileSplit.length - 1];
+  //   folderFileSplit.pop();
+  //   let folderPath = folderFileSplit.join('/');
+  //   let metaData = {};
+  //   let file = {
+  //     filename: fileName,
+  //     folderpath: folderPath,
+  //     metadata: metaData,
+  //   };
+  //   toObject.push(file);
+  // }
 
   storage.musicOBJ = JSON.stringify(toObject);
   fs.writeFile("./public/master-list.json", JSON.stringify(toObject), 'utf8', function (err) {
